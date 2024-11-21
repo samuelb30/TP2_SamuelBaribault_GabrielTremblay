@@ -11,6 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
+import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
 import com.example.ca.csfoy.tp2_sb_gt.ui.theme.TP2_SamuelBaribault_GabrielTremblayTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +25,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             TP2_SamuelBaribault_GabrielTremblayTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    InitApp(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    @Composable
+    private fun InitApp(modifier: Modifier) {
+        val db = connectDatabase(applicationContext)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TP2_SamuelBaribault_GabrielTremblayTheme {
-        Greeting("Android")
+        val navController = rememberNavController()
+        NavHost(navController = navController, startDestination = Routes.Main.title){
+            composable(Routes.Main.title){
+                
+            }
+        }
+
+
     }
 }
