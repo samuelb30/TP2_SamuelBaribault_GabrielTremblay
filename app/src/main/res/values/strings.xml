@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TP2_SamuelBaribault_GabrielTremblay</string>
-    <string name="recipe_title_main">Recettes</string>
+    <string name="recipe_image">Recipe image</string>
+    <string name="recipe_title_main">Recettes\n</string>
 </resources>
