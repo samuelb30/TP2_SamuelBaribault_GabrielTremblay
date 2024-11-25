@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun InitApp(modifier: Modifier) {
         val db = connectDatabase(applicationContext)
+
         val viewModel: RecipeViewModel = viewModel(factory = viewModelFactory {
             initializer { RecipeViewModel(db.recipeDao()) }
         })
@@ -45,7 +46,9 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Routes.Main.title){
             composable(Routes.Main.title){
+
                 ShowRecipes(modifier, SpoonAcular.fetchRandomRecipes(), viewModel)
+
             }
         }
 

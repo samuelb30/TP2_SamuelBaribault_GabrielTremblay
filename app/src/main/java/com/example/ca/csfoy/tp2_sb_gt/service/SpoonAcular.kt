@@ -1,6 +1,5 @@
 package com.example.ca.csfoy.tp2_sb_gt.service
 
-import com.example.ca.csfoy.tp2_sb_gt.model.Recipe
 import java.net.HttpURLConnection
 import java.net.URL
 

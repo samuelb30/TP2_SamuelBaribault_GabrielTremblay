@@ -8,22 +8,21 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.example.ca.csfoy.tp2_sb_gt.R
-import com.example.ca.csfoy.tp2_sb_gt.model.Recipe
-import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
+
 
 
 @Composable
 fun ShowRecipes(modifier: androidx.compose.ui.Modifier, recipes: List<Recipe>, recipeViewModel: RecipeViewModel){
-    Surface {
+
+fun ShowRecipes(modifier: Modifier, recipeViewModel: RecipeViewModel){
+    Surface (modifier = modifier){
         Column {
             Row{
                 Text(text = stringResource(R.string.recipe_title_main))
             }
         }
-        LazyColumn{
-            items(items = recipes){ recipe ->
+        LazyColumn(modifier = modifier){
+            items(items = recipeViewModel.recipes){ recipe ->
                 RecipeItem(recipe = recipe, onClick = {recipeViewModel.currentRecipe = recipe})
             }
         }
@@ -34,6 +33,6 @@ fun ShowRecipes(modifier: androidx.compose.ui.Modifier, recipes: List<Recipe>, r
 @Composable
 fun RecipeItem(recipe: Recipe, onClick: () -> Unit){
     Card(onClick = onClick) {
-
+        Text(text = recipe.title)
     }
 }
