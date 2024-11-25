@@ -16,13 +16,18 @@ data class Recipe (
         fun recipeFromJson(data: String): Recipe? {
             return null
         }
+<<<<<<< Updated upstream
 
+=======
+        
+>>>>>>> Stashed changes
        fun recipeListFromJson(data: String): List<Recipe> {
            val recipeListJson = JSONArray(data)
-           val recipeList = recipeListJson.let {
+           val recipeList = recipeListJson.let { it ->
                0.until(it.length()).map { index ->
                    val recipe = it.getJSONObject(index)
                    val ingredientsArray = recipe.getJSONArray("extendedIngredients")
+<<<<<<< Updated upstream
                    var ingredients = arrayOf<String>()
 
 
@@ -31,11 +36,30 @@ data class Recipe (
                    }
 
                    Recipe(recipe.getInt("id"), recipe.getString("title"), recipe.getString("imageUrl"), ingredients)
+=======
+                   val ingredients = ingredientsArray.let {
+                       0.until(recipe.length()).map { index ->
+                           it.getJSONObject(index).getString("name")
+                       }
+                   }
+                   
+                   Recipe(
+                       recipe.getInt("id"),
+                       recipe.getString("title"),
+                       recipe.getString("imageUrl"),
+                       ingredients
+                   )
+>>>>>>> Stashed changes
 
 
                }
            }
            return recipeList
        }
+<<<<<<< Updated upstream
+=======
+
+           
+>>>>>>> Stashed changes
     }
 }
