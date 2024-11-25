@@ -1,6 +1,5 @@
 package com.example.ca.csfoy.tp2_sb_gt.viewModel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
