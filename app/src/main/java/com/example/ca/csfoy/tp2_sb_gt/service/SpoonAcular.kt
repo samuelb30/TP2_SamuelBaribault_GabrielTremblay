@@ -19,7 +19,7 @@ object SpoonAcular {
             requestMethod = "GET"
             inputStream.bufferedReader().readText()
         }
-        return Recipe.recipeArrayFromJson(data)
+        return Recipe.recipeListFromJson(data)
     }
 
 }
