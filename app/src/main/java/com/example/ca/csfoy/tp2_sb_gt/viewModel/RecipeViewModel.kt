@@ -1,6 +1,8 @@
 package com.example.ca.csfoy.tp2_sb_gt.viewModel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -11,16 +13,18 @@ import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RecipeViewModel (recipeDao: FavoriteRecipeDao): ViewModel() {
-    val recipes = mutableListOf<Recipe>()
+class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
+    val recipes = mutableStateListOf<Recipe>()
     var currentRecipe by mutableStateOf<Recipe?>(null)
-    init{
-        viewModelScope.launch (Dispatchers.IO){
-           reloadRecipes()
-        }
+    init {
+        reloadRecipes()
     }
     fun reloadRecipes(){
-        recipes.clear()
-        recipes.addAll(SpoonAcular.fetchRandomRecipes())
+        viewModelScope.launch(Dispatchers.IO) {
+            recipes.clear()
+            recipes.addAll(SpoonAcular.fetchRandomRecipes())
+        }
     }
 }
+
+
