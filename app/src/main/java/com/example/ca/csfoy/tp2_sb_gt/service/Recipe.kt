@@ -7,7 +7,9 @@ class Recipe(
     val id: Int,
     val title: String,
     val imageUrl: String,
-    val ingredients: List<String>
+    val ingredients: List<String>,
+    val summary: String,
+    val prepTime: String
 ) {
     companion object {
         fun recipeFromJson(data: String): Recipe? {
@@ -37,7 +39,9 @@ class Recipe(
                             recipe.getInt("id"),
                             recipe.getString("title"),
                             imageUrl,
-                            ingredients
+                            ingredients,
+                            recipe.getString("summary"),
+                            if(!recipe.has("preparationMinutes")){"0"}else{recipe.getString("preparationMinutes")}
                         )
 
 
