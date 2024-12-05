@@ -53,7 +53,10 @@ class MainActivity : ComponentActivity() {
             "https://img.spoonacular.com/recipes/912391-556x370.jpg",
             listOf("bob", "bob2"),
             "Simple Ranchy Breaded Fish Fillets is a <b>pescatarian</b> main course. One serving contains <b>308 calories</b>, <b>26g of protein</b>, and <b>14g of fat</b>. This recipe serves 4 and costs \$2.58 per serving. 1 person has made this recipe and would make it again. Head to the store and pick up butter, ranch dressing mix, tilapia fillet, and a few other things to make it today. From preparation to the plate, this recipe takes approximately <b>25 minutes, ",
-            "15"
+            "25",
+            "8",
+            "24.99",
+            true
         )
 
 

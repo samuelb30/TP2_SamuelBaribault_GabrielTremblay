@@ -9,7 +9,10 @@ class Recipe(
     val imageUrl: String,
     val ingredients: List<String>,
     val summary: String,
-    val prepTime: String
+    val prepTime: String,
+    val servings: String,
+    val pricePerServing: String,
+    val isFavorite: Boolean
 ) {
     companion object {
         fun recipeFromJson(data: String): Recipe? {
@@ -41,7 +44,10 @@ class Recipe(
                             imageUrl,
                             ingredients,
                             recipe.getString("summary"),
-                            if(!recipe.has("preparationMinutes")){"0"}else{recipe.getString("preparationMinutes")}
+                            recipe.getString("readyInMinutes"),
+                            recipe.getString("servings"),
+                            recipe.getString("pricePerServing"),
+                            false
                         )
 
 
