@@ -7,7 +7,9 @@ class Recipe(
     val id: Int,
     val title: String,
     val imageUrl: String,
-    val ingredients: List<String>
+    val ingredients: List<String>,
+    val description: String,
+    val price: Float = 0.0f
 ) {
     companion object {
         fun recipeFromJson(data: String): Recipe? {
@@ -37,7 +39,9 @@ class Recipe(
                             recipe.getInt("id"),
                             recipe.getString("title"),
                             imageUrl,
-                            ingredients
+                            ingredients,
+                            recipe.getString("summary"),
+                            recipe.getDouble("pricePerServing").toFloat()
                         )
 
 

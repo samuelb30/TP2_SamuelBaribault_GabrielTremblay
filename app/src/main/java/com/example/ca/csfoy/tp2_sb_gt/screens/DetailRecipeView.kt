@@ -20,8 +20,4 @@ fun DetailRecipeView(recipe: Recipe){
     }
 }
 
-@Preview
-@Composable
-fun DetailRecipeViewPreview(){
-    DetailRecipeView(Recipe(912391,"Dole Whip At Home :)", "https://img.spoonacular.com/recipes/912391-556x370.jpg", listOf("bob", "bob2")))
-}
+

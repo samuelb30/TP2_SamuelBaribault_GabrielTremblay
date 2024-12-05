@@ -13,6 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
+    val isRefreshing = mutableStateOf(false)
+    var searchText by mutableStateOf("")
     val recipes = mutableStateListOf<Recipe>()
     var currentRecipe by mutableStateOf<Recipe?>(null)
     init {

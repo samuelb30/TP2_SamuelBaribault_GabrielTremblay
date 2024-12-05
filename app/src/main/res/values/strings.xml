@@ -2,4 +2,7 @@
     <string name="app_name">TP2_SamuelBaribault_GabrielTremblay</string>
     <string name="recipe_image">Recipe image</string>
     <string name="recipe_title_main">Recettes\n</string>
+    <string name="search_text">Rechercher par ingrédients</string>
+    <string name="favorites_button_text">Favoris</string>
+    <string name="reload_button_text">Autres recommendations</string>
 </resources>
