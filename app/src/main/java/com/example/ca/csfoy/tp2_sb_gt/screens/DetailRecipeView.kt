@@ -70,7 +70,7 @@ fun DetailRecipeView(recipe: Recipe, paddingValues: PaddingValues){
                     ){
                         InformationCells(recipe.prepTime + " mins", R.drawable.clock_icon_lg)
                         InformationCells(recipe.servings + " servings", R.drawable.servings_icon)
-                        InformationCells(recipe.pricePerServing + " $", R.drawable.price_icon)
+                        InformationCells("$" + recipe.pricePerServing, R.drawable.price_icon)
                     }
                     Text(recipe.title, fontSize = 30.sp, style = MaterialTheme.typography.titleLarge)
                     Text(text="Ingredients:", fontWeight = FontWeight.Bold)
