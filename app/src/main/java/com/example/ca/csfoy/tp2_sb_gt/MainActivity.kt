@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
@@ -52,6 +53,7 @@ class MainActivity : ComponentActivity() {
             "Dole Whip At Home :)",
             "https://img.spoonacular.com/recipes/912391-556x370.jpg",
             listOf("bob", "bob2"),
+            listOf("Préparer", "Manger", "Mourir", "Devenir Super-Man"),
             "Simple Ranchy Breaded Fish Fillets is a <b>pescatarian</b> main course. One serving contains <b>308 calories</b>, <b>26g of protein</b>, and <b>14g of fat</b>. This recipe serves 4 and costs \$2.58 per serving. 1 person has made this recipe and would make it again. Head to the store and pick up butter, ranch dressing mix, tilapia fillet, and a few other things to make it today. From preparation to the plate, this recipe takes approximately <b>25 minutes, ",
             "25",
             "8",
@@ -63,7 +65,22 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Routes.Main.title){
             composable(Routes.Main.title){
-                DetailRecipeView(recipe, paddingValues)
+                DetailRecipeView(
+                    recipe,
+                    paddingValues,
+                    onClickReturn = {
+                        navController.popBackStack()
+                    },
+                    onClickFavorite = {
+                        if(viewModel.isCurrentRecipeFavorite){
+                            viewModel.isCurrentRecipeFavorite = false
+                            //viewModel.currentRecipe.isFavorite = false
+                        }else{
+                            viewModel.isCurrentRecipeFavorite = true
+                            //viewModel.currentRecipe.isFavorite = true
+                        }
+                    }
+                )
                 //ShowRecipes(modifier, viewModel)
             }
         }

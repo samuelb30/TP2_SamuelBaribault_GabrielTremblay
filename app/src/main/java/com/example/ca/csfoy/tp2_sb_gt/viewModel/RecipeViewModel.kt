@@ -15,6 +15,9 @@ import kotlinx.coroutines.launch
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     val recipes = mutableStateListOf<Recipe>()
     var currentRecipe by mutableStateOf<Recipe?>(null)
+    var isCurrentRecipeFavorite by mutableStateOf(false)
+
+    /*
     init {
         reloadRecipes()
     }
@@ -23,7 +26,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
             recipes.clear()
             recipes.addAll(SpoonAcular.fetchRandomRecipes())
         }
-    }
+    }*/
 }
 
 
