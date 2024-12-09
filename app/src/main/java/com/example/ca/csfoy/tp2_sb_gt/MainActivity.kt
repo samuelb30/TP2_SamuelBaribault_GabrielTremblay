@@ -46,7 +46,6 @@ import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
 import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
 import com.example.ca.csfoy.tp2_sb_gt.screens.ShowRecipes
-import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.ui.theme.TP2_SamuelBaribault_GabrielTremblayTheme
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 import kotlinx.coroutines.delay
@@ -64,7 +63,10 @@ class MainActivity : ComponentActivity() {
                         title = { Text("TP2") }
                     )
                 }) { innerPadding ->
-                    InitApp(modifier = Modifier.padding(innerPadding))
+                    InitApp(
+                        modifier = Modifier.padding(innerPadding),
+                        paddingValues = innerPadding
+                    )
                 }
             }
         }
@@ -72,15 +74,12 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun InitApp(paddingValues: PaddingValues) {
+    private fun InitApp(modifier: Modifier, paddingValues: PaddingValues) {
         val db = connectDatabase(applicationContext)
 
         val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory {
             initializer { RecipeViewModel(db.favoriteRecipeDao()) }
         })
-
-        
-
 
         
         val refreshScope = rememberCoroutineScope()
@@ -119,11 +118,14 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = Routes.Main.title) {
                     composable(Routes.Main.title) {
-                        ShowRecipes(modifier, recipeViewModel)
+                        ShowRecipes(modifier, {
+                            navController.navigate(Routes.DetailedView.title)
+                        },recipeViewModel)
                     }
-                    composable(Routes.DetailedView.title){
-                        DetailRecipeView(recipeViewModel.currentRecipe, paddingValues)
+                    composable(Routes.DetailedView.title) {
+                        DetailRecipeView(recipeViewModel.currentRecipe)
                     }
+
                 }
 
             }

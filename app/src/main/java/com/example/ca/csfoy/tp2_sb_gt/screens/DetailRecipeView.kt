@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,6 +22,7 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,51 +41,65 @@ import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 
 @Composable
-fun DetailRecipeView(recipe: Recipe, paddingValues: PaddingValues){
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(paddingValues)
+fun DetailRecipeView(recipe: Recipe){
+    LazyColumn (
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Box {
-            AsyncImage(
-                recipe.imageUrl,
-                stringResource(R.string.recipe_image),
-                modifier = Modifier.fillMaxWidth()
-            )
-            ReturnButton(Modifier.align(Alignment.TopStart).padding(5.dp))
-            FavoriteButton(Modifier.align(Alignment.TopEnd).padding(5.dp), recipe.isFavorite)
-            Surface (
-                shape = RoundedCornerShape(20.dp),
-                shadowElevation = 10.dp,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .offset(y = 260.dp)
-                    .fillMaxSize()
-            ){
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(10.dp)
-                ){
-                    Row (
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        InformationCells(recipe.prepTime + " mins", R.drawable.clock_icon_lg)
-                        InformationCells(recipe.servings + " servings", R.drawable.servings_icon)
-                        InformationCells("$" + recipe.pricePerServing, R.drawable.price_icon)
+        item{
+            Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
+                Box{
+                AsyncImage(
+                    recipe.imageUrl,
+                    stringResource(R.string.recipe_image),
+                    modifier = Modifier.fillMaxSize().size(250.dp)
+                )
+                ReturnButton(Modifier.padding(5.dp).align(alignment = Alignment.TopStart))
+                FavoriteButton(Modifier.padding(5.dp).align(alignment = Alignment.TopEnd), recipe.isFavorite)
+                }
+            }
+
+
+        }
+        item {
+
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    shadowElevation = 10.dp,
+                    modifier = Modifier.offset(y = (-10).dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(10.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier
+                        ) {
+                            InformationCells(recipe.prepTime + " mins", R.drawable.clock_icon_lg)
+                            InformationCells(
+                                recipe.servings + " servings",
+                                R.drawable.servings_icon
+                            )
+                            InformationCells("$" + recipe.pricePerServing, R.drawable.price_icon)
+                        }
+                        Text(
+                            recipe.title,
+                            fontSize = 30.sp,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(text = "Ingredients:", fontWeight = FontWeight.Bold)
+                        recipe.ingredients.forEach { ingredient -> Text(text = "• $ingredient") }
+                        Text(text = "Description:", fontWeight = FontWeight.Bold)
+                        Text(text = recipe.summary)
+                        Text(text = "Temps de preparation:", fontWeight = FontWeight.Bold)
+
                     }
-                    Text(recipe.title, fontSize = 30.sp, style = MaterialTheme.typography.titleLarge)
-                    Text(text="Ingredients:", fontWeight = FontWeight.Bold)
-                    recipe.ingredients.forEach { ingredient -> Text(text = "• $ingredient") }
-                    Text(text="Description:", fontWeight = FontWeight.Bold)
-                    Text(text=recipe.summary)
-                    Text(text="Temps de preparation:", fontWeight = FontWeight.Bold)
 
                 }
 
-            }
+        }
+        item{
+            Spacer(Modifier.size(60.dp))
         }
     }
 }

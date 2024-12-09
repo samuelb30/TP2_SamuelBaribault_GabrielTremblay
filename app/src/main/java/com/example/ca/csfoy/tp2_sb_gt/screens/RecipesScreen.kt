@@ -3,6 +3,7 @@ package com.example.ca.csfoy.tp2_sb_gt.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
@@ -29,7 +31,7 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 
 @Composable
-fun ShowRecipes(modifier: Modifier, recipeViewModel: RecipeViewModel) {
+fun ShowRecipes(modifier: Modifier, onClick: () -> Unit,recipeViewModel: RecipeViewModel) {
     Row {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
@@ -39,8 +41,11 @@ fun ShowRecipes(modifier: Modifier, recipeViewModel: RecipeViewModel) {
             items(recipeViewModel.recipes) { recipe ->
                 RecipeItem(
                     recipe = recipe,
-                    onClick = { recipeViewModel.currentRecipe = recipe }
+                    onClick = { recipeViewModel.currentRecipe = recipe; onClick() }
                 )
+            }
+            item{
+                Spacer(Modifier.size(55.dp))
             }
         }
     }
