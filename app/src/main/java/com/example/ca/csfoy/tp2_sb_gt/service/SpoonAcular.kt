@@ -1,10 +1,11 @@
 package com.example.ca.csfoy.tp2_sb_gt.service
 
+import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
 import java.net.HttpURLConnection
 import java.net.URL
 
 object SpoonAcular {
-    private const val API_KEY1 = "117536bdd4dd454bbc772c9aa213ba45"
+    private const val API_KEY1 = "f512b9fbf5b942e7930d6531c60b0618"
     private const val GET_RANDOM_RECIPES_URL =
         "https://api.spoonacular.com/recipes/random?number=10&apiKey=$API_KEY1"
     private const val GET_RECIPES_BY_ID_URL = "https://api.spoonacular.com/recipes/{id}/information?apiKey=$API_KEY1"
@@ -12,14 +13,17 @@ object SpoonAcular {
     val getRecipeUrlById: (id: Int) -> String = {
         GET_RECIPES_BY_ID_URL.replace("{id}", it.toString())
     }
-    fun fetchRandomRecipes(): List<Recipe>{
+
+
+    fun fetchRandomRecipes(recipeDao: FavoriteRecipeDao): List<Recipe>{
         val url = URL(GET_RANDOM_RECIPES_URL)
         val connection = url.openConnection() as HttpURLConnection
         val data = connection.run {
             requestMethod = "GET"
             inputStream.bufferedReader().readText()
         }
-        return Recipe.recipeListFromJson(data)
+        return Recipe.recipeListFromJson(data, recipeDao)
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.ca.csfoy.tp2_sb_gt
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,11 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,7 +43,6 @@ import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
 import com.example.ca.csfoy.tp2_sb_gt.screens.ShowRecipes
 import com.example.ca.csfoy.tp2_sb_gt.ui.theme.TP2_SamuelBaribault_GabrielTremblayTheme
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -61,33 +57,32 @@ class MainActivity : ComponentActivity() {
                         title = { Text("TP2") }
                     )
                 }) { innerPadding ->
-                    InitApp(modifier = Modifier.padding(innerPadding))
+                    InitApp(modifier = Modifier.padding(innerPadding), applicationContext)
                 }
             }
         }
     }
-
+}
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun InitApp(modifier: Modifier) {
-        val db = connectDatabase(applicationContext)
+    private fun InitApp(modifier: Modifier, context: Context) {
+        val db = connectDatabase(context)
 
         val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory {
             initializer { RecipeViewModel(db.favoriteRecipeDao()) }
         })
 
         val refreshScope = rememberCoroutineScope()
-        var refreshing by remember { mutableStateOf(false) }
+
         fun refresh() {
-            refreshing = true
+            recipeViewModel.isLoading = true
             refreshScope.launch {
                 recipeViewModel.reloadRecipes()
-                delay(1500)
-                refreshing = false
+                recipeViewModel.isLoading = false
             }
         }
 
-        val state = rememberPullRefreshState(refreshing, ::refresh)
+        val state = rememberPullRefreshState(recipeViewModel.isLoading, ::refresh)
         val navController = rememberNavController()
         Box(
             modifier = modifier
@@ -95,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 .padding(horizontal = 18.dp)
                 .pullRefresh(
                     state = rememberPullRefreshState(
-                        refreshing = refreshing,
+                        refreshing = recipeViewModel.isLoading,
                         onRefresh = { refresh() })
                 ),
         ) {
@@ -141,8 +136,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+            PullRefreshIndicator(recipeViewModel.isLoading, state, Modifier.align(Alignment.TopCenter))
         }
-
     }
-}
+
