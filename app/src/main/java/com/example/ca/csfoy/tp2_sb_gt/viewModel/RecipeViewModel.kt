@@ -25,16 +25,14 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
 
     init {
         reloadRecipes()
-        currentRecipe = randomRecipes[0]
     }
     fun reloadRecipes(){
         viewModelScope.launch(Dispatchers.IO) {
             isLoading = true
             delay(500)
-            recipes.clear()
-            recipes.addAll(SpoonAcular.fetchRandomRecipes(recipeDao))
+            randomRecipes.clear()
+            randomRecipes.addAll(SpoonAcular.fetchRandomRecipes(recipeDao))
             isLoading = false
-
         }
     }
 

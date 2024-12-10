@@ -63,13 +63,16 @@ class Recipe(
                         imageUrl = recipe.getString("image")
                     }
                     Recipe(
-                        recipe.getInt("id"),
-                        recipe.getString("title"),
-                        imageUrl,
-                        ingredients,
-                        recipe.getString("summary"),
-                        recipe.getDouble("pricePerServing").toFloat(),
-                        isFavorite(
+                       id= recipe.getInt("id"),
+                       title = recipe.getString("title"),
+                       imageUrl = imageUrl,
+                        ingredients = ingredients,
+                        instructions = instructions,
+                        summary = recipe.getString("summary"),
+                        pricePerServing = recipe.getString("pricePerServing"),
+                        prepTime = recipe.getString("readyInMinutes"),
+                        servings = recipe.getString("servings"),
+                        isFavorite = isFavorite(
                             recipe.getInt("id"),
                             recipeDao
                         )
