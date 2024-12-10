@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
 import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
+import com.example.ca.csfoy.tp2_sb_gt.screens.ShowRecipes
 import com.example.ca.csfoy.tp2_sb_gt.ui.theme.TP2_SamuelBaribault_GabrielTremblayTheme
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 import kotlinx.coroutines.launch
@@ -106,7 +107,9 @@ class MainActivity : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = Routes.Main.title) {
                 composable(Routes.Main.title) {
-                    //ShowRecipes(modifier, recipeViewModel)
+                    ShowRecipes(modifier, recipeViewModel, onClick = {
+                        navController.navigate(Routes.DetailedView.title)
+                    })
                 }
                 composable(Routes.DetailedView.title) {
                     DetailRecipeView(
@@ -117,10 +120,8 @@ class MainActivity : ComponentActivity() {
                         onClickFavorite = {
                             if (recipeViewModel.isCurrentRecipeFavorite) {
                                 recipeViewModel.isCurrentRecipeFavorite = false
-                                //viewModel.currentRecipe.isFavorite = false
                             } else {
                                 recipeViewModel.isCurrentRecipeFavorite = true
-                                //viewModel.currentRecipe.isFavorite = true
                             }
                         }
                     )

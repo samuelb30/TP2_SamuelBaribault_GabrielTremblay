@@ -101,9 +101,11 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                         stringResource(R.string.ingredients_list_label))
                     RecipeSummary(recipe.summary)
                     RecipeInfoList(recipe.instructions, stringResource(R.string.instructions_label))
-                    Spacer(Modifier.height(60.dp))
                 }
             }
+        }
+        item {
+            Spacer(Modifier.height(50.dp))
         }
     }
 }

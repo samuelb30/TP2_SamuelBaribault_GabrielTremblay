@@ -27,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -37,7 +36,7 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 
 @Composable
-fun ShowRecipes(modifier: Modifier, onClick: () -> Unit,recipeViewModel: RecipeViewModel) {
+fun ShowRecipes(modifier: Modifier, recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
     Row {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
@@ -47,7 +46,7 @@ fun ShowRecipes(modifier: Modifier, onClick: () -> Unit,recipeViewModel: RecipeV
             items(recipeViewModel.randomRecipes) { recipe ->
                 RecipeItem(
                     recipe = recipe,
-                    onRecipeClick = { recipeViewModel.currentRecipe = recipe },
+                    onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
                     onFavoriteClick = { recipe.isFavorite = !recipe.isFavorite; if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe)}
                 )
             }
