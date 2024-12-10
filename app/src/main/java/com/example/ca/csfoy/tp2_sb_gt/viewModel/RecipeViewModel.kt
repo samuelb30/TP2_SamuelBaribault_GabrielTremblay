@@ -17,6 +17,8 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     var searchText by mutableStateOf("")
     val recipes = mutableStateListOf<Recipe>()
     var currentRecipe by mutableStateOf(Recipe(-1, "", "", listOf(), "", "", "", "", false))
+    var isCurrentRecipeFavorite by mutableStateOf(false)
+
     init {
         reloadRecipes()
         currentRecipe = recipes[0]
@@ -27,7 +29,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
             recipes.addAll(SpoonAcular.fetchRandomRecipes())
 
         }
-    }
+    }*/
 }
 
 

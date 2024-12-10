@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,7 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Button
@@ -31,75 +31,77 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 
 @Composable
-fun DetailRecipeView(recipe: Recipe){
+fun DetailRecipeView(recipe: Recipe, paddingValues: PaddingValues, onClickReturn: ()->Unit, onClickFavorite: ()->Unit){
     LazyColumn (
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
     ){
         item{
-            Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
-                Box{
+            Box (
+                modifier = Modifier.fillMaxWidth()
+            ){
                 AsyncImage(
                     recipe.imageUrl,
                     stringResource(R.string.recipe_image),
-                    modifier = Modifier.fillMaxSize().size(250.dp)
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.Crop
                 )
-                ReturnButton(Modifier.padding(5.dp).align(alignment = Alignment.TopStart))
-                FavoriteButton(Modifier.padding(5.dp).align(alignment = Alignment.TopEnd), recipe.isFavorite)
-                }
+                ReturnButton(
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(5.dp),
+                    onClick = onClickReturn
+                )
+                FavoriteButton(
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(5.dp), recipe.isFavorite,
+                    onClick = onClickFavorite
+                )
             }
-
-
         }
         item {
-
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    shadowElevation = 10.dp,
-                    modifier = Modifier.offset(y = (-10).dp)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            modifier = Modifier
-                        ) {
-                            InformationCells(recipe.prepTime + " mins", R.drawable.clock_icon_lg)
-                            InformationCells(
-                                recipe.servings + " servings",
-                                R.drawable.servings_icon
-                            )
-                            InformationCells("$" + recipe.pricePerServing, R.drawable.price_icon)
-                        }
-                        Text(
-                            recipe.title,
-                            fontSize = 30.sp,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(text = "Ingredients:", fontWeight = FontWeight.Bold)
-                        recipe.ingredients.forEach { ingredient -> Text(text = "• $ingredient") }
-                        Text(text = "Description:", fontWeight = FontWeight.Bold)
-                        Text(text = recipe.summary)
-                        Text(text = "Temps de preparation:", fontWeight = FontWeight.Bold)
-
+            Surface (
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp,
+                modifier = Modifier
+                    .offset(0.dp, (-18).dp)
+            ){
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier
+                        .padding(10.dp)
+                ){
+                    Row (
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        InformationCells(recipe.prepTime + stringResource(R.string.prepTime_information_cell_units), R.drawable.clock_icon_lg)
+                        InformationCells(recipe.servings + stringResource(R.string.servings_information_cell_units), R.drawable.servings_icon)
+                        InformationCells(stringResource(R.string.pricePerServings_information_cell_unit) + recipe.pricePerServing, R.drawable.price_icon)
                     }
-
+                    Text(recipe.title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary)
+                    RecipeInfoList(recipe.ingredients,
+                        stringResource(R.string.ingredients_list_label))
+                    RecipeSummary(recipe.summary)
+                    RecipeInfoList(recipe.instructions, stringResource(R.string.instructions_label))
+                    Spacer(Modifier.height(60.dp))
                 }
-
-        }
-        item{
-            Spacer(Modifier.size(60.dp))
+            }
         }
     }
 }
@@ -107,7 +109,7 @@ fun DetailRecipeView(recipe: Recipe){
 @Composable
 fun InformationCells(text: String, iconId: Int){
     Surface (
-        color = Color.Green,
+        color = MaterialTheme.colorScheme.secondary,
         shape = RoundedCornerShape(15.dp),
         shadowElevation = 3.dp
     ){
@@ -119,40 +121,70 @@ fun InformationCells(text: String, iconId: Int){
                 color = Color.White,
                 shape = CircleShape,
             ){
-                Image(painter = painterResource(id = iconId), "", modifier = Modifier
-                    .size(30.dp)
-                    .padding())
+                Image(painter = painterResource(id = iconId),
+                    stringResource(R.string.icon_for_the_information_cell), modifier = Modifier
+                        .size(30.dp)
+                        .padding())
             }
-            Text(text=text, fontWeight = FontWeight.Bold ,modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
+            Text(text=text, fontWeight = FontWeight.Bold ,modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp), color = Color.Black)
         }
     }
 }
 
 @Composable
-fun ReturnButton(modifier: Modifier){
+fun ReturnButton(modifier: Modifier, onClick: () -> Unit){
     Button(
-        onClick = {},
-        shape = ButtonDefaults.shape,
+        onClick = onClick,
+        elevation = ButtonDefaults.buttonElevation(10.dp),
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(Color.Green)
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     ) {
-        Icon(Icons.Rounded.ArrowBack, "")
+        Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.return_button_description), tint = Color.White)
     }
 }
 
 @Composable
-fun FavoriteButton(modifier: Modifier, isRecipeFavorite: Boolean) {
+fun FavoriteButton(modifier: Modifier, isRecipeFavorite: Boolean, onClick: () -> Unit) {
     Button(
-        onClick = {},
+        onClick = onClick,
+        elevation = ButtonDefaults.buttonElevation(10.dp),
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(Color.Green)
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     ) {
         if(!isRecipeFavorite){
-            Icon(Icons.Rounded.FavoriteBorder, "icon_when_recipe_not_favorite")
+            Icon(Icons.Rounded.FavoriteBorder,
+                stringResource(R.string.icon_when_recipe_not_favorite), tint = Color.White)
         }
         else{
-            Icon(Icons.Rounded.Favorite, "icon_when_recipe_not_favorite")
+            Icon(Icons.Rounded.Favorite,
+                stringResource(R.string.icon_when_recipe_favorite), tint = Color.White)
         }
+    }
+}
+
+@Composable
+fun RecipeInfoList(items: List<String>, listTitle: String) {
+    Column (
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.fillMaxWidth()
+    ){
+        Text(text = listTitle, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
+        items.forEach { item -> Text(text = stringResource(R.string.list_item, item), color = MaterialTheme.colorScheme.tertiary) }
+    }
+}
+
+@Composable
+fun RecipeSummary(summary: String) {
+    Column {
+        Text(
+            text = stringResource(R.string.recipe_summary_label),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Text(
+            text = summary,
+            color = MaterialTheme.colorScheme.tertiary
+        )
     }
 }
 

@@ -5,4 +5,15 @@
     <string name="search_text">Rechercher par ingrédients</string>
     <string name="favorites_button_text">Favoris</string>
     <string name="reload_button_text">Autres recommendations</string>
+    <string name="recipe_summary_label">Description:</string>
+    <string name="return_button_description">return button</string>
+    <string name="icon_when_recipe_not_favorite">icon_when_recipe_not_favorite</string>
+    <string name="icon_when_recipe_favorite">icon_when_recipe_favorite</string>
+    <string name="icon_for_the_information_cell">Icon for the information cell</string>
+    <string name="instructions_label">Instructions:</string>
+    <string name="ingredients_list_label">Ingrédients:</string>
+    <string name="prepTime_information_cell_units">" mins"</string>
+    <string name="servings_information_cell_units">" servings"</string>
+    <string name="pricePerServings_information_cell_unit">$</string>
+    <string name="list_item">• %1$s</string>
 </resources>

@@ -8,11 +8,12 @@ class Recipe(
     val title: String,
     val imageUrl: String,
     val ingredients: List<String>,
+    val instructions: List<String>,
     val summary: String,
     val prepTime: String,
     val servings: String,
     val pricePerServing: String,
-    val isFavorite: Boolean
+    var isFavorite: Boolean
 ) {
     companion object {
         fun recipeFromJson(data: String): Recipe? {
@@ -26,9 +27,17 @@ class Recipe(
                 0.until(it.length()).map { index ->
                     val recipe = it.getJSONObject(index)
                     val ingredientsArray = recipe.getJSONArray("extendedIngredients")
+                    val instructionArray = recipe.getJSONArray("analyzedInstructions")
                     var ingredients = listOf<String>()
+                    var instructions = listOf<String>()
 
                     ingredients = ingredientsArray.let {
+                        0.until(it.length()).map { index ->
+                            it.getJSONObject(index).getString("name")
+                        }
+                    }
+
+                    instructions = instructionArray.let {
                         0.until(it.length()).map { index ->
                             it.getJSONObject(index).getString("name")
                         }
@@ -43,15 +52,13 @@ class Recipe(
                             recipe.getString("title"),
                             imageUrl,
                             ingredients,
+                            instructions,
                             recipe.getString("summary"),
                             recipe.getString("readyInMinutes"),
                             recipe.getString("servings"),
                             recipe.getString("pricePerServing"),
                             false
                         )
-
-
-
                 }
                 
             }

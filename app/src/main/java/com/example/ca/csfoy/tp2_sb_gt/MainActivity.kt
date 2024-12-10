@@ -41,6 +41,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
@@ -81,7 +82,6 @@ class MainActivity : ComponentActivity() {
             initializer { RecipeViewModel(db.favoriteRecipeDao()) }
         })
 
-        
         val refreshScope = rememberCoroutineScope()
         var refreshing by remember { mutableStateOf(false) }
         fun refresh() {
@@ -90,6 +90,27 @@ class MainActivity : ComponentActivity() {
                 recipeViewModel.reloadRecipes()
                 delay(1500)
                 refreshing = false
+
+        val navController = rememberNavController()
+        NavHost(navController = navController, startDestination = Routes.Main.title){
+            composable(Routes.Main.title){
+                DetailRecipeView(
+                    recipe,
+                    paddingValues,
+                    onClickReturn = {
+                        navController.popBackStack()
+                    },
+                    onClickFavorite = {
+                        if(viewModel.isCurrentRecipeFavorite){
+                            viewModel.isCurrentRecipeFavorite = false
+                            //viewModel.currentRecipe.isFavorite = false
+                        }else{
+                            viewModel.isCurrentRecipeFavorite = true
+                            //viewModel.currentRecipe.isFavorite = true
+                        }
+                    }
+                )
+                //ShowRecipes(modifier, viewModel)
             }
         }
 
