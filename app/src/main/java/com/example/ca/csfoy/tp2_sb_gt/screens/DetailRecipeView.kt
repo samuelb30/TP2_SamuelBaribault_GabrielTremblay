@@ -39,14 +39,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
+import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
-fun DetailRecipeView(recipe: Recipe, paddingValues: PaddingValues, onClickReturn: ()->Unit, onClickFavorite: ()->Unit){
+fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, onClickFavorite: ()->Unit){
+    val recipe = recipeViewModel.currentRecipe
+
     LazyColumn (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
     ){
         item{
             Box (
