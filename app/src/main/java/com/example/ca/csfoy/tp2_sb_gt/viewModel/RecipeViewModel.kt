@@ -7,9 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
+import com.example.ca.csfoy.tp2_sb_gt.model.FavoriteRecipe
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
@@ -26,11 +29,27 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     }
     fun reloadRecipes(){
         viewModelScope.launch(Dispatchers.IO) {
-            randomRecipes.clear()
-            randomRecipes.addAll(SpoonAcular.fetchRandomRecipes())
+            isLoading = true
+            delay(500)
+            recipes.clear()
+            recipes.addAll(SpoonAcular.fetchRandomRecipes(recipeDao))
+            isLoading = false
 
         }
     }
+
+    fun addFavorite(recipe: Recipe) {
+        viewModelScope.launch(Dispatchers.IO) {
+            recipeDao.insert(FavoriteRecipe(recipe.id))
+        }
+    }
+
+    fun removeFavorite(recipe: Recipe) {
+        viewModelScope.launch(Dispatchers.IO) {
+            recipeDao.remove(recipe.id)
+        }
+    }
+
 }
 
 

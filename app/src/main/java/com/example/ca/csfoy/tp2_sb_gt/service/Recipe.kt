@@ -1,5 +1,11 @@
 package com.example.ca.csfoy.tp2_sb_gt.service
 
+import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
+import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 
@@ -20,7 +26,16 @@ class Recipe(
             return null
         }
 
-        fun recipeListFromJson(data: String): List<Recipe> {
+        private fun isFavorite(recipeId: Int, recipeDao: FavoriteRecipeDao): Boolean {
+            var isFavorite = false
+            CoroutineScope(Dispatchers.IO).launch {
+                isFavorite = recipeDao.getById(recipeId).first() != null
+            }
+
+            return isFavorite
+        }
+
+        fun recipeListFromJson(data: String, recipeDao: FavoriteRecipeDao): List<Recipe> {
             val randomRecipeObject = JSONObject(data)
             val recipeListJson = randomRecipeObject.getJSONArray("recipes")
             val recipeList = recipeListJson.let { it ->
@@ -44,23 +59,25 @@ class Recipe(
                     }
 
                     var imageUrl = ""
-                    if(recipe.has("image")){
-                      imageUrl = recipe.getString("image")
+                    if (recipe.has("image")) {
+                        imageUrl = recipe.getString("image")
                     }
-                        Recipe(
+                    Recipe(
+                        recipe.getInt("id"),
+                        recipe.getString("title"),
+                        imageUrl,
+                        ingredients,
+                        recipe.getString("summary"),
+                        recipe.getDouble("pricePerServing").toFloat(),
+                        isFavorite(
                             recipe.getInt("id"),
-                            recipe.getString("title"),
-                            imageUrl,
-                            ingredients,
-                            instructions,
-                            recipe.getString("summary"),
-                            recipe.getString("readyInMinutes"),
-                            recipe.getString("servings"),
-                            recipe.getString("pricePerServing"),
-                            false
+                            recipeDao
                         )
+                    )
+
+
                 }
-                
+
             }
             return recipeList
         }

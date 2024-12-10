@@ -1,5 +1,6 @@
 package com.example.ca.csfoy.tp2_sb_gt.service
 
+import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -12,14 +13,17 @@ object SpoonAcular {
     val getRecipeUrlById: (id: Int) -> String = {
         GET_RECIPES_BY_ID_URL.replace("{id}", it.toString())
     }
-    fun fetchRandomRecipes(): List<Recipe>{
+
+
+    fun fetchRandomRecipes(recipeDao: FavoriteRecipeDao): List<Recipe>{
         val url = URL(GET_RANDOM_RECIPES_URL)
         val connection = url.openConnection() as HttpURLConnection
         val data = connection.run {
             requestMethod = "GET"
             inputStream.bufferedReader().readText()
         }
-        return Recipe.recipeListFromJson(data)
+        return Recipe.recipeListFromJson(data, recipeDao)
     }
+
 
 }

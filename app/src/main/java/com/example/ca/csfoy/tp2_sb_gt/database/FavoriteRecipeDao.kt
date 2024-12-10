@@ -11,10 +11,13 @@ interface FavoriteRecipeDao {
     @Query("SELECT * FROM FavoriteRecipe")
     fun getAll(): Flow<List<FavoriteRecipe>>
 
-    @Query("SELECT * FROM FavoriteRecipe WHERE id = :id")
-    fun getById(id: Int): Flow<List<FavoriteRecipe>>
+    @Query("SELECT * FROM FavoriteRecipe WHERE recipeId = :id")
+    fun getById(id: Int): Flow<FavoriteRecipe>
 
     @Insert
-    suspend fun insert(favorite: FavoriteRecipe)
+    fun insert(favoriteRecipe: FavoriteRecipe)
+
+    @Query("DELETE FROM FavoriteRecipe WHERE recipeId = :id")
+    fun remove(id: Int)
 }
 

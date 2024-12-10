@@ -63,11 +63,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun InitApp(modifier: Modifier, applicationContext: Context) {
-    val db = connectDatabase(applicationContext)
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun InitApp(modifier: Modifier, context: Context) {
+        val db = connectDatabase(context)
 
     val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory {
         initializer { RecipeViewModel(db.favoriteRecipeDao()) }
