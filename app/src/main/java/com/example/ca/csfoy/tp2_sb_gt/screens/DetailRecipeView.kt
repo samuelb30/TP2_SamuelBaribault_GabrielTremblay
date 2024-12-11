@@ -26,6 +26,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +44,6 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
 fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, onClickFavorite: ()->Unit){
-    val recipe = recipeViewModel.currentRecipe
 
     LazyColumn (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,7 +55,7 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                 modifier = Modifier.fillMaxWidth()
             ){
                 AsyncImage(
-                    model = if (recipe.imageUrl != "") recipe.imageUrl else recipeViewModel.imagePlaceHolderId,
+                    model = if (recipeViewModel.currentRecipe.imageUrl != "") recipeViewModel.currentRecipe.imageUrl else recipeViewModel.imagePlaceHolderId,
                     stringResource(R.string.recipe_image),
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -67,7 +70,8 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                 FavoriteButton(
                     Modifier
                         .align(Alignment.TopEnd)
-                        .padding(5.dp), recipeViewModel.isCurrentRecipeFavorite,
+                        .padding(5.dp),
+                    recipeViewModel.isCurrentRecipeFavorite,
                     onClick = onClickFavorite
                 )
             }
@@ -89,15 +93,15 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier.fillMaxWidth()
                     ){
-                        InformationCells(recipe.prepTime + stringResource(R.string.prepTime_information_cell_units), R.drawable.clock_icon_lg)
-                        InformationCells(recipe.servings + stringResource(R.string.servings_information_cell_units), R.drawable.servings_icon)
-                        InformationCells(stringResource(R.string.pricePerServings_information_cell_unit) + recipe.pricePerServing, R.drawable.price_icon)
+                        InformationCells(recipeViewModel.currentRecipe.prepTime + stringResource(R.string.prepTime_information_cell_units), R.drawable.clock_icon_lg)
+                        InformationCells(recipeViewModel.currentRecipe.servings + stringResource(R.string.servings_information_cell_units), R.drawable.servings_icon)
+                        InformationCells(stringResource(R.string.pricePerServings_information_cell_unit) + recipeViewModel.currentRecipe.pricePerServing, R.drawable.price_icon)
                     }
-                    Text(recipe.title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary)
-                    RecipeInfoList(recipe.ingredients,
+                    Text(recipeViewModel.currentRecipe.title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary)
+                    RecipeInfoList(recipeViewModel.currentRecipe.ingredients,
                         stringResource(R.string.ingredients_list_label))
-                    RecipeSummary(recipe.summary)
-                    RecipeInfoList(recipe.instructions, stringResource(R.string.instructions_label))
+                    RecipeSummary(recipeViewModel.currentRecipe.summary)
+                    RecipeInfoList(recipeViewModel.currentRecipe.instructions, stringResource(R.string.instructions_label))
                 }
             }
         }
@@ -151,11 +155,14 @@ fun ReturnButton(modifier: Modifier, onClick: () -> Unit){
 @Composable
 fun FavoriteButton(modifier: Modifier, isRecipeFavorite: Boolean, onClick: () -> Unit) {
     Button(
-        onClick = onClick,
+        onClick = {
+            onClick()
+                  },
         elevation = ButtonDefaults.buttonElevation(10.dp),
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     ) {
+
         if(!isRecipeFavorite){
             Icon(Icons.Rounded.FavoriteBorder,
                 stringResource(R.string.icon_when_recipe_not_favorite), tint = Color.White)

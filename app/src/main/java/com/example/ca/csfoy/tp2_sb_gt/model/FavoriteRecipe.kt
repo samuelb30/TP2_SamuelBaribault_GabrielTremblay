@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class FavoriteRecipe(
     @PrimaryKey
-    val recipeId: Int
+    val recipeId: Int,
+    val title: String,
+    val image: String,
 )
 

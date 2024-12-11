@@ -98,7 +98,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
     val state = rememberPullRefreshState(recipeViewModel.isLoading, ::refresh)
 
     Box(
-        modifier = Modifier
+        modifier = Modifier.padding(innerPadding)
             .fillMaxSize()
             .pullRefresh(
                 state = rememberPullRefreshState(
@@ -140,43 +140,44 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                     })
                 }
                 composable(Routes.DetailedView.title) {
+                    recipeViewModel.isCurrentRecipeFavorite = recipeViewModel.currentRecipe.isFavorite
                     DetailRecipeView(
                         recipeViewModel,
                         onClickReturn = {
                             navController.popBackStack()
                         },
                         onClickFavorite = {
-                            recipeViewModel.isCurrentRecipeFavorite = !recipeViewModel.isCurrentRecipeFavorite
-                            if (recipeViewModel.isCurrentRecipeFavorite) {
+                            recipeViewModel.currentRecipe.isFavorite = !recipeViewModel.currentRecipe.isFavorite
+                            recipeViewModel.isCurrentRecipeFavorite = recipeViewModel.currentRecipe.isFavorite
+                            if (recipeViewModel.currentRecipe.isFavorite) {
                                 recipeViewModel.addFavorite(recipeViewModel.currentRecipe)
-                            }else {
+                            } else {
                                 recipeViewModel.removeFavorite(recipeViewModel.currentRecipe)
                             }
-                            recipeViewModel.favoriteRecipes.remove(recipeViewModel.currentRecipe)
                         }
                     )
                 }
-                composable(Routes.Favorites.title){
+                composable(Routes.Favorites.title) {
                     FavoriteRecipesList(
                         recipeViewModel,
                         onClick = {
+                            recipeViewModel.fetchCurrentRecipeInfo()
                             navController.navigate(Routes.DetailedView.title)
                         }
                     )
                 }
-                        }
-                    )
-                }
-                composable(Routes.SearchByIngredients.title){
-                   SearchByIngredientsView(modifier, recipeViewModel, onClick = {
-                       recipeViewModel.fetchCurrentRecipeInfo()
-                       navController.navigate(Routes.DetailedView.title)
-                   }, onReturnClick = {
-                       navController.popBackStack()
-                   })
+
+                composable(Routes.SearchByIngredients.title) {
+                    SearchByIngredientsView(recipeViewModel, onClick = {
+                        recipeViewModel.fetchCurrentRecipeInfo()
+                        navController.navigate(Routes.DetailedView.title)
+                    }, onReturnClick = {
+                        navController.popBackStack()
+                    })
                 }
             }
-        }
+            }
+
         Row(modifier = Modifier.align(alignment = Alignment.BottomStart).padding(horizontal = 18.dp)) {
             val buttonModifier = Modifier.size(width = 150.dp, height = 40.dp)
             Surface(
@@ -210,6 +211,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
             }
 
         }
+
         PullRefreshIndicator(
             recipeViewModel.isLoading,
             state,
@@ -217,6 +219,8 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
         )//https://developer.android.com/reference/kotlin/androidx/compose/material/pullrefresh/package-summary
     }
 }
+
+
 
 
 

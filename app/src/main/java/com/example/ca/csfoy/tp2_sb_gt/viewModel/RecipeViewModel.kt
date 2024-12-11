@@ -23,18 +23,33 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     val randomRecipes = mutableStateListOf<Recipe>()
     val favoriteRecipes = mutableStateListOf<Recipe>()
     val filteredRecipes = mutableStateListOf<Recipe>()
-    var currentRecipe by mutableStateOf(Recipe(-1, "", "", listOf(), listOf(), "", "", "", "", false))
+    var currentRecipe by mutableStateOf(
+        Recipe(
+            -1,
+            "",
+            "",
+            listOf(),
+            listOf(),
+            "",
+            "",
+            "",
+            "",
+            false
+        )
+    )
     var isCurrentRecipeFavorite by mutableStateOf(false)
     var displayedSearchText = ""
+
     init {
         getFavoriteRecipes()
         reloadRecipes()
     }
-    private fun loadRecipes(recipes: List<Recipe>, mutableRecipeList: MutableList<Recipe>){
+
+    private fun loadRecipes(recipes: List<Recipe>, mutableRecipeList: MutableList<Recipe>) {
         isLoading = true
         mutableRecipeList.clear()
-        for(recipe in recipes){
-            if(isFavorite(recipe.id)){
+        for (recipe in recipes) {
+            if (isFavorite(recipe.id)) {
                 recipe.isFavorite = true
             }
             mutableRecipeList.add(recipe)
@@ -42,22 +57,26 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         isLoading = false
     }
 
-    fun reloadRecipes(){
+    fun reloadRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
             loadRecipes(SpoonAcular.fetchRandomRecipes(), randomRecipes)
         }
     }
-    fun loadFilteredRecipes(){
+
+    fun loadFilteredRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
             isLoading = true
-            loadRecipes(SpoonAcular.fetchRecipesByIngredients(searchText.value.split(",")), filteredRecipes)
+            loadRecipes(
+                SpoonAcular.fetchRecipesByIngredients(searchText.value.split(",")),
+                filteredRecipes
+            )
             isLoading = false
         }
     }
 
     fun addFavorite(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
-            recipeDao.insert(FavoriteRecipe(recipe.id))
+            recipeDao.insert(FavoriteRecipe(recipe.id,recipe.title,recipe.imageUrl))
         }
     }
 
@@ -66,6 +85,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
             recipeDao.remove(recipe.id)
         }
     }
+
     private fun isFavorite(recipeId: Int): Boolean {
         var isFavorite = false
         viewModelScope.launch(Dispatchers.IO) {
@@ -74,21 +94,34 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         return isFavorite
     }
 
-    fun getFavoriteRecipes(){
-        viewModelScope.launch(Dispatchers.IO){
-            recipeDao.getAll().collect{recipes ->
+    fun getFavoriteRecipes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            recipeDao.getAll().collect { recipes ->
                 favoriteRecipes.clear()
-                recipes.forEach{recipe ->
-                    val favoriteRecipe = SpoonAcular.fetchSpecificRecipe(recipe.recipeId)
-                    favoriteRecipe.isFavorite = true
+                recipes.forEach { recipe ->
+                    val favoriteRecipe = Recipe(
+                        recipe.recipeId,
+                        recipe.title,
+                        recipe.image,
+                        listOf(),
+                        listOf(),
+                        "",
+                        "",
+                        "",
+                        "",
+                        true
+                    )
                     favoriteRecipes.add(favoriteRecipe)
                 }
             }
+
+        }
+    }
     fun fetchCurrentRecipeInfo() {
         viewModelScope.launch(Dispatchers.IO) {
             currentRecipe = SpoonAcular.fetchRecipeById(currentRecipe.id)
         }
     }
-}
 
+}
 
