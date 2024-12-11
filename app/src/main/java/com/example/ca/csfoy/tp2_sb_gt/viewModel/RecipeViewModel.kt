@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
 import com.example.ca.csfoy.tp2_sb_gt.model.FavoriteRecipe
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
@@ -14,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
+    val imagePlaceHolderId = R.drawable.recipe_placeholder
+
     var isLoading by mutableStateOf(false)
     var searchText by mutableStateOf("")
     val randomRecipes = mutableStateListOf<Recipe>()

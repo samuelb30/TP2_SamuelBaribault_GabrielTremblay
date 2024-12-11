@@ -50,7 +50,8 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
                     onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
                     onFavoriteClick = { recipe.isFavorite = !recipe.isFavorite; if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe)},
                     cardSize = Modifier.size(350.dp, 300.dp),
-                    heightIn = Modifier.heightIn(200.dp, 240.dp)
+                    heightIn = Modifier.heightIn(200.dp, 240.dp),
+                    recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
                 )
             }
             item{
@@ -69,6 +70,7 @@ fun RecipeItem(
     onRecipeClick: () -> Unit,
     cardSize: Modifier,
     heightIn: Modifier,
+    recipeImagePlaceHolder: Int
 ) {
 
     ElevatedCard(
@@ -86,7 +88,7 @@ fun RecipeItem(
                         modifier = heightIn
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(15.dp)),
-                        model = if (recipe.imageUrl != "") recipe.imageUrl else R.drawable.recipe_placeholder,
+                        model = if (recipe.imageUrl != "") recipe.imageUrl else recipeImagePlaceHolder,
                         contentDescription = recipe.title
                     )
                 }

@@ -52,7 +52,7 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                 modifier = Modifier.fillMaxWidth()
             ){
                 AsyncImage(
-                    model = if (recipe.imageUrl != "") recipe.imageUrl else R.drawable.recipe_placeholder,
+                    model = if (recipe.imageUrl != "") recipe.imageUrl else recipeViewModel.imagePlaceHolderId,
                     stringResource(R.string.recipe_image),
                     modifier = Modifier
                         .fillMaxWidth(),

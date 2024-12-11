@@ -39,7 +39,8 @@ fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
                         recipeViewModel.getFavoriteRecipes()
                     },
                     cardSize = Modifier.size(200.dp, 200.dp),
-                    heightIn = Modifier.heightIn(100.dp, 140.dp)
+                    heightIn = Modifier.heightIn(100.dp, 140.dp),
+                    recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
                 )
             }
         }
