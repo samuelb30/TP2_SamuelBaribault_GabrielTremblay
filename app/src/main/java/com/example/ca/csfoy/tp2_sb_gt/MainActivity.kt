@@ -48,7 +48,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
 import com.example.ca.csfoy.tp2_sb_gt.screens.FavoriteRecipesList
-import com.example.ca.csfoy.tp2_sb_gt.screens.ReturnButton
 import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
 import com.example.ca.csfoy.tp2_sb_gt.screens.SearchByIngredientsView
 import com.example.ca.csfoy.tp2_sb_gt.screens.ShowRecipes
@@ -202,7 +201,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                         modifier = buttonModifier,
                         onClick = {
                             navController.navigate(Routes.Favorites.title)
-                            recipeViewModel.getFavoriteRecipes()
+                            recipeViewModel.loadFavoriteRecipes()
                         }) {
                         Text(text = stringResource(R.string.favorites_button_text))
                     }

@@ -4,40 +4,24 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object SpoonAcular {
-<<<<<<< Updated upstream
+
     //private const val API_KEY1 = "117536bdd4dd454bbc772c9aa213ba45"
-    private const val API_KEY1 = "6e2d67d9dc4f4ed491d4add2ff728821"
+    private const val API_KEY1 = "d66ffb4720ea413da122f86dc75427f0"
     private const val GET_RANDOM_RECIPES_URL =
         "https://api.spoonacular.com/recipes/random?number=10&apiKey=$API_KEY1"
     private const val GET_RECIPES_BY_ID_URL = "https://api.spoonacular.com/recipes/{id}/information?apiKey=$API_KEY1"
 
-   val getRecipeUrlByIngredients: (ingredientsList:List<String>) -> String = {
-       var ingredients: String = ""
-       ingredients = it.joinToString(",+")
-       "https://api.spoonacular.com/recipes/findByIngredients?ingredients=$ingredients&number=8&apiKey=$API_KEY1"
-   }
 
 
     val getRecipeUrlById: (id: Int) -> String = {
         GET_RECIPES_BY_ID_URL.replace("{id}", it.toString())
-=======
-    private const val API_KEY1 = "d66ffb4720ea413da122f86dc75427f0"
-    private const val GET_RANDOM_RECIPES_URL =
-        "https://api.spoonacular.com/recipes/random?number=10&apiKey=$API_KEY1"
-    private const val GET_RECIPES_BY_ID_URL =
-        "https://api.spoonacular.com/recipes/{id}/information?apiKey=$API_KEY1"
-
-
-    private val getRecipeUrlById: (id: Int) -> String = {
-        GET_RECIPES_BY_ID_URL.replace("{id}", it.toString())
-    }
+}
 
 
     val getRecipeUrlByIngredients: (ingredientsList: List<String>) -> String = {
         var ingredients: String = ""
         ingredients = it.joinToString(",+")
         "https://api.spoonacular.com/recipes/findByIngredients?ingredients=$ingredients&number=8&apiKey=$API_KEY1"
->>>>>>> Stashed changes
     }
 
 
@@ -51,17 +35,9 @@ object SpoonAcular {
             requestMethod = "GET"
             inputStream.bufferedReader().readText()
         }
-<<<<<<< Updated upstream
-        /*TODO
-        return Recipe.recipeFromJson(data)
-         */
-        return Recipe.recipeCardListFromJson(data)
-=======
-
 
         return Recipe.recipeCardListFromJson(data)
 
->>>>>>> Stashed changes
     }
 
     fun fetchRecipeById(id: Int): Recipe {

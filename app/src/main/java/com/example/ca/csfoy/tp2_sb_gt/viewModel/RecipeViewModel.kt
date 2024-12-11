@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     val imagePlaceHolderId = R.drawable.recipe_placeholder
-
     var isLoading by mutableStateOf(false)
     var searchText = mutableStateOf("")
     val randomRecipes = mutableStateListOf<Recipe>()
@@ -41,7 +40,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     var displayedSearchText = ""
 
     init {
-        getFavoriteRecipes()
+        loadFavoriteRecipes()
         reloadRecipes()
     }
 
@@ -77,13 +76,17 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     fun addFavorite(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
             recipeDao.insert(FavoriteRecipe(recipe.id,recipe.title,recipe.imageUrl))
+            recipe.isFavorite = true
         }
+        favoriteRecipes.add(recipe)
     }
 
     fun removeFavorite(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
             recipeDao.remove(recipe.id)
+            recipe.isFavorite = false
         }
+        favoriteRecipes.remove(recipe)
     }
 
     private fun isFavorite(recipeId: Int): Boolean {
@@ -94,10 +97,10 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         return isFavorite
     }
 
-    fun getFavoriteRecipes() {
+    fun loadFavoriteRecipes() {
+        favoriteRecipes.clear()
         viewModelScope.launch(Dispatchers.IO) {
             recipeDao.getAll().collect { recipes ->
-                favoriteRecipes.clear()
                 recipes.forEach { recipe ->
                     val favoriteRecipe = Recipe(
                         recipe.recipeId,
@@ -120,7 +123,9 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     fun fetchCurrentRecipeInfo() {
         viewModelScope.launch(Dispatchers.IO) {
             currentRecipe = SpoonAcular.fetchRecipeById(currentRecipe.id)
+            currentRecipe.isFavorite = isFavorite(currentRecipe.id)
         }
+
     }
 
 }
