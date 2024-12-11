@@ -105,6 +105,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                     refreshing = recipeViewModel.isLoading,
                     onRefresh = { refresh() })
             )
+            .padding(innerPadding)
 
     ) {
         Column {
@@ -164,11 +165,8 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                         }
                     )
                 }
-                        }
-                    )
-                }
                 composable(Routes.SearchByIngredients.title){
-                   SearchByIngredientsView(modifier, recipeViewModel, onClick = {
+                   SearchByIngredientsView(recipeViewModel, onClick = {
                        recipeViewModel.fetchCurrentRecipeInfo()
                        navController.navigate(Routes.DetailedView.title)
                    }, onReturnClick = {

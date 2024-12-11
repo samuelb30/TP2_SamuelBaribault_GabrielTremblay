@@ -74,16 +74,18 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         return isFavorite
     }
 
-    fun getFavoriteRecipes(){
-        viewModelScope.launch(Dispatchers.IO){
-            recipeDao.getAll().collect{recipes ->
+    fun getFavoriteRecipes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            recipeDao.getAll().collect { recipes ->
                 favoriteRecipes.clear()
-                recipes.forEach{recipe ->
-                    val favoriteRecipe = SpoonAcular.fetchSpecificRecipe(recipe.recipeId)
+                recipes.forEach { recipe ->
+                    val favoriteRecipe = SpoonAcular.fetchRecipeById(recipe.recipeId)
                     favoriteRecipe.isFavorite = true
                     favoriteRecipes.add(favoriteRecipe)
                 }
             }
+        }
+    }
     fun fetchCurrentRecipeInfo() {
         viewModelScope.launch(Dispatchers.IO) {
             currentRecipe = SpoonAcular.fetchRecipeById(currentRecipe.id)

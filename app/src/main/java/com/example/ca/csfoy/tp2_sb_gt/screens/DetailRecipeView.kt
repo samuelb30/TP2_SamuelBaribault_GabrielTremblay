@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.ca.csfoy.tp2_sb_gt.R
+import com.example.ca.csfoy.tp2_sb_gt.service.Ingredient
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
@@ -94,10 +95,12 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                         InformationCells(stringResource(R.string.pricePerServings_information_cell_unit) + recipe.pricePerServing, R.drawable.price_icon)
                     }
                     Text(recipe.title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary)
-                    RecipeInfoList(recipe.ingredients,
-                        stringResource(R.string.ingredients_list_label))
+                    IngredientList(
+                        recipe.ingredients,
+                        stringResource(R.string.ingredients_list_label)
+                    )
                     RecipeSummary(recipe.summary)
-                    RecipeInfoList(recipe.instructions, stringResource(R.string.instructions_label))
+                    InstructionList(recipe.instructions, stringResource(R.string.instructions_label))
                 }
             }
         }
@@ -168,18 +171,42 @@ fun FavoriteButton(modifier: Modifier, isRecipeFavorite: Boolean, onClick: () ->
 }
 
 @Composable
-fun RecipeInfoList(items: List<String>, listTitle: String) {
+fun InstructionList(instructions: List<String>, listTitle: String) {
     Column (
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxWidth()
     ){
         Text(text = listTitle, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
-        items.forEach { item ->
-            if(item != ""){
-                Text(text = stringResource(R.string.list_item, item), color = MaterialTheme.colorScheme.tertiary)
+        instructions.forEach { instruction ->
+            if(instruction != ""){
+                Text(
+                    text = stringResource(R.string.list_item, instruction),
+                    color = MaterialTheme.colorScheme.tertiary)
             }
         }
-        if(items.isEmpty()){
+        if(instructions.isEmpty() || instructions[0].isEmpty()){
+            Text(text="• None", color = MaterialTheme.colorScheme.tertiary)
+        }
+    }
+}
+
+@Composable
+fun IngredientList(ingredients: List<Ingredient>, listTitle: String) {
+    Column (
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.fillMaxWidth()
+    ){
+        Text(text = listTitle, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
+        ingredients.forEach { ingredient ->
+            Text(text = stringResource(
+                R.string.ingredient_details,
+                ingredient.quantity,
+                if(ingredient.unit != "") ingredient.unit else "units",
+                ingredient.name
+            ),
+                color = MaterialTheme.colorScheme.tertiary)
+        }
+        if(ingredients.isEmpty()){
             Text(text="• None", color = MaterialTheme.colorScheme.tertiary)
         }
     }
