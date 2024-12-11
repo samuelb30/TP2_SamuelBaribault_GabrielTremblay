@@ -25,6 +25,11 @@ val Typography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
+    titleSmall = TextStyle(
+        fontFamily = appFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+    ),
     labelMedium = TextStyle(
         fontFamily = appFont,
         fontWeight = FontWeight.Bold,

@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -40,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
+import com.example.ca.csfoy.tp2_sb_gt.screens.FavoriteRecipesList
 import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
 import com.example.ca.csfoy.tp2_sb_gt.screens.ShowRecipes
 import com.example.ca.csfoy.tp2_sb_gt.ui.theme.TP2_SamuelBaribault_GabrielTremblayTheme
@@ -58,16 +61,16 @@ class MainActivity : ComponentActivity() {
                         title = { Text("TP2") }
                     )
                 }) { innerPadding ->
-                    InitApp(modifier = Modifier.padding(innerPadding), applicationContext)
+                    InitApp(innerPadding, applicationContext)
                 }
             }
         }
     }
 }
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    private fun InitApp(modifier: Modifier, context: Context) {
-        val db = connectDatabase(context)
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun InitApp(innerPadding: PaddingValues, context: Context) {
+    val db = connectDatabase(context)
 
     val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory {
         initializer { RecipeViewModel(db.favoriteRecipeDao()) }
@@ -86,9 +89,10 @@ class MainActivity : ComponentActivity() {
     val state = rememberPullRefreshState(recipeViewModel.isLoading, ::refresh)
     val navController = rememberNavController()
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 18.dp)
+            .padding(innerPadding)
             .pullRefresh(
                 state = rememberPullRefreshState(
                     refreshing = recipeViewModel.isLoading,
@@ -107,7 +111,7 @@ class MainActivity : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = Routes.Main.title) {
                 composable(Routes.Main.title) {
-                    ShowRecipes(modifier, recipeViewModel, onClick = {
+                    ShowRecipes(recipeViewModel, onClick = {
                         navController.navigate(Routes.DetailedView.title)
                     })
                 }
@@ -118,17 +122,25 @@ class MainActivity : ComponentActivity() {
                             navController.popBackStack()
                         },
                         onClickFavorite = {
+                            recipeViewModel.isCurrentRecipeFavorite = !recipeViewModel.isCurrentRecipeFavorite
                             if (recipeViewModel.isCurrentRecipeFavorite) {
-                                recipeViewModel.isCurrentRecipeFavorite = false
-                            } else {
-                                recipeViewModel.isCurrentRecipeFavorite = true
+                                recipeViewModel.addFavorite(recipeViewModel.currentRecipe)
+                            }else {
+                                recipeViewModel.removeFavorite(recipeViewModel.currentRecipe)
                             }
+                            recipeViewModel.favoriteRecipes.remove(recipeViewModel.currentRecipe)
                         }
                     )
                 }
-
+                composable(Routes.Favorites.title){
+                    FavoriteRecipesList(
+                        recipeViewModel,
+                        onClick = {
+                            navController.navigate(Routes.DetailedView.title)
+                        }
+                    )
+                }
             }
-
         }
         Row(modifier = Modifier.align(alignment = Alignment.BottomStart)) {
             val buttonModifier = Modifier.size(width = 150.dp, height = 40.dp)
@@ -137,7 +149,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(bottom = 5.dp)
                     .height(50.dp),
-                shape = CircleShape,
+                shape = RoundedCornerShape(10.dp),
                 shadowElevation = 2.dp
             ) {
                 Row(
@@ -147,7 +159,15 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Button(
                         modifier = buttonModifier,
-                        onClick = { navController.navigate(Routes.Favorites.title) }) {
+                        onClick = { navController.popBackStack()}) {
+                        Text(text = stringResource(R.string.discover_button_text))
+                    }
+                    Button(
+                        modifier = buttonModifier,
+                        onClick = {
+                            navController.navigate(Routes.Favorites.title)
+                            recipeViewModel.getFavoriteRecipes()
+                        }) {
                         Text(text = stringResource(R.string.favorites_button_text))
                     }
                 }

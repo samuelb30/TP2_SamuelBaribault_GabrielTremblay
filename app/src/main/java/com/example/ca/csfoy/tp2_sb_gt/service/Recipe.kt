@@ -1,7 +1,6 @@
 package com.example.ca.csfoy.tp2_sb_gt.service
 
 import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
-import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -22,10 +21,6 @@ class Recipe(
     var isFavorite: Boolean
 ) {
     companion object {
-        fun recipeFromJson(data: String): Recipe? {
-            return null
-        }
-
         private fun isFavorite(recipeId: Int, recipeDao: FavoriteRecipeDao): Boolean {
             var isFavorite = false
             CoroutineScope(Dispatchers.IO).launch {
@@ -33,6 +28,45 @@ class Recipe(
             }
 
             return isFavorite
+        }
+
+        fun recipeFromJson(data: String): Recipe{
+            val recipeJSON = JSONObject(data)
+
+            val ingredientsArray = recipeJSON.getJSONArray("extendedIngredients")
+            val instructionArray = recipeJSON.getJSONArray("analyzedInstructions")
+            var ingredients = listOf<String>()
+            var instructions = listOf<String>()
+
+            ingredients = ingredientsArray.let {
+                0.until(it.length()).map { index ->
+                    it.getJSONObject(index).getString("name")
+                }
+            }
+
+            instructions = instructionArray.let {
+                0.until(it.length()).map { index ->
+                    it.getJSONObject(index).getString("name")
+                }
+            }
+
+            var imageUrl = ""
+            if (recipeJSON.has("image")) {
+                imageUrl = recipeJSON.getString("image")
+            }
+            val recipe = Recipe(
+                id= recipeJSON.getInt("id"),
+                title = recipeJSON.getString("title"),
+                imageUrl = imageUrl,
+                ingredients = ingredients,
+                instructions = instructions,
+                summary = recipeJSON.getString("summary"),
+                pricePerServing = recipeJSON.getString("pricePerServing"),
+                prepTime = recipeJSON.getString("readyInMinutes"),
+                servings = recipeJSON.getString("servings"),
+                isFavorite = false
+            )
+            return recipe
         }
 
         fun recipeListFromJson(data: String, recipeDao: FavoriteRecipeDao): List<Recipe> {

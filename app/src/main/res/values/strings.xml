@@ -16,4 +16,5 @@
     <string name="servings_information_cell_units">" servings"</string>
     <string name="pricePerServings_information_cell_unit">$</string>
     <string name="list_item">• %1$s</string>
+    <string name="discover_button_text">Discover</string>
 </resources>

@@ -55,7 +55,7 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                 modifier = Modifier.fillMaxWidth()
             ){
                 AsyncImage(
-                    recipe.imageUrl,
+                    model = if (recipe.imageUrl != "") recipe.imageUrl else R.drawable.recipe_placeholder,
                     stringResource(R.string.recipe_image),
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -70,7 +70,7 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
                 FavoriteButton(
                     Modifier
                         .align(Alignment.TopEnd)
-                        .padding(5.dp), recipe.isFavorite,
+                        .padding(5.dp), recipeViewModel.isCurrentRecipeFavorite,
                     onClick = onClickFavorite
                 )
             }

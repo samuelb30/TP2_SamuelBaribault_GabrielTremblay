@@ -1,49 +1,47 @@
 package com.example.ca.csfoy.tp2_sb_gt.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.example.ca.csfoy.tp2_sb_gt.R
+import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
+//Inspirer de https://stackoverflow.com/questions/74652077/jetpack-compose-how-to-make-two-lazy-columns-scroll-together
 @Composable
 fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
-    ElevatedCard(
-        modifier = Modifier.size(350.dp, 300.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
-        onClick = onClick
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(10.dp)
-        ) {
-            Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(15.dp)).heightIn(min = 200.dp, max = 250.dp),
-                    model = if (recipeViewModel.currentRecipe.imageUrl != "") recipeViewModel.currentRecipe.imageUrl else R.drawable.recipe_placeholder,
-                    contentDescription = recipeViewModel.currentRecipe.title
+    val state = rememberLazyStaggeredGridState()
+
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        modifier = Modifier.fillMaxSize(),
+        state = state,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalItemSpacing = 10.dp,
+        content = {
+            items(recipeViewModel.favoriteRecipes) { recipe ->
+                RecipeItem(
+                    recipe = recipe,
+                    onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
+                    onFavoriteClick = {
+                        recipe.isFavorite = !recipe.isFavorite
+                        recipeViewModel.removeFavorite(recipe)
+                        recipeViewModel.favoriteRecipes.remove(recipe)
+                        recipeViewModel.getFavoriteRecipes()
+                    },
+                    cardSize = Modifier.size(200.dp, 200.dp),
+                    heightIn = Modifier.heightIn(100.dp, 140.dp)
                 )
             }
-            Row(Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
-                Text(text = recipeViewModel.currentRecipe.title, overflow = TextOverflow.Ellipsis)
-            }
         }
-    }
+    )
 }

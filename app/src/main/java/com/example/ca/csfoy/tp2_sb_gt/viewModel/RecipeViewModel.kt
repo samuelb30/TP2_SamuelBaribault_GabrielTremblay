@@ -11,8 +11,6 @@ import com.example.ca.csfoy.tp2_sb_gt.model.FavoriteRecipe
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
@@ -24,6 +22,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     var isCurrentRecipeFavorite by mutableStateOf(false)
 
     init {
+        getFavoriteRecipes()
         reloadRecipes()
     }
     fun reloadRecipes(){
@@ -47,6 +46,18 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         }
     }
 
+    fun getFavoriteRecipes(){
+        viewModelScope.launch(Dispatchers.IO){
+            recipeDao.getAll().collect{recipes ->
+                favoriteRecipes.clear()
+                recipes.forEach{recipe ->
+                    val favoriteRecipe = SpoonAcular.fetchSpecificRecipe(recipe.recipeId)
+                    favoriteRecipe.isFavorite = true
+                    favoriteRecipes.add(favoriteRecipe)
+                }
+            }
+        }
+    }
 }
 
 
