@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.ca.csfoy.tp2_sb_gt.R
-import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
@@ -130,7 +127,11 @@ fun InformationCells(text: String, iconId: Int){
                         .size(30.dp)
                         .padding())
             }
-            Text(text=text, fontWeight = FontWeight.Bold ,modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp), color = Color.Black)
+            Text(
+                text=if(text != ""){text}else { stringResource(R.string.when_info_for_cell_unavailable) },
+                fontWeight = FontWeight.Bold ,
+                modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp),
+                color = Color.Black)
         }
     }
 }
@@ -173,7 +174,14 @@ fun RecipeInfoList(items: List<String>, listTitle: String) {
         modifier = Modifier.fillMaxWidth()
     ){
         Text(text = listTitle, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
-        items.forEach { item -> Text(text = stringResource(R.string.list_item, item), color = MaterialTheme.colorScheme.tertiary) }
+        items.forEach { item ->
+            if(item != ""){
+                Text(text = stringResource(R.string.list_item, item), color = MaterialTheme.colorScheme.tertiary)
+            }
+        }
+        if(items.isEmpty()){
+            Text(text="• None", color = MaterialTheme.colorScheme.tertiary)
+        }
     }
 }
 
@@ -186,7 +194,7 @@ fun RecipeSummary(summary: String) {
             color = MaterialTheme.colorScheme.tertiary
         )
         Text(
-            text = summary,
+            text = if(summary != ""){summary} else { stringResource(R.string.when_no_summary)},
             color = MaterialTheme.colorScheme.tertiary
         )
     }
