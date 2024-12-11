@@ -19,4 +19,8 @@
     <string name="discover_button_text">Discover</string>
     <string name="when_no_summary">None</string>
     <string name="when_info_for_cell_unavailable">-----</string>
+    <string name="search_placeholder">lettuce, tomatoes, etc…</string>
+    <string name="no_ingredients_entered_text">Enter ingredients to search</string>
+    <string name="no_recipes_found_text">"No recipes found for: "</string>
+    <string name="recipes_found_text">"Search results for: "</string>
 </resources>

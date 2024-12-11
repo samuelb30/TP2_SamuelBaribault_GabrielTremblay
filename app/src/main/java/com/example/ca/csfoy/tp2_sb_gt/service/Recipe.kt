@@ -1,10 +1,6 @@
 package com.example.ca.csfoy.tp2_sb_gt.service
 
-import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 
 
@@ -21,57 +17,74 @@ class Recipe(
     var isFavorite: Boolean
 ) {
     companion object {
-        private fun isFavorite(recipeId: Int, recipeDao: FavoriteRecipeDao): Boolean {
-            var isFavorite = false
-            CoroutineScope(Dispatchers.IO).launch {
-                isFavorite = recipeDao.getById(recipeId).first() != null
-            }
 
-            return isFavorite
+        fun recipeCardListFromJson(data: String): List<Recipe>{
+            val recipeListJson = JSONArray(data)
+            val recipeList = recipeListJson.let{
+                0.until(it.length()).map { index ->
+                 val recipeJSON = it.getJSONObject(index)
+                    Recipe(
+                        id= recipeJSON.getInt("id"),
+                        title = recipeJSON.getString("title"),
+                        imageUrl = recipeJSON.getString("image"),
+                        ingredients = listOf(),
+                        instructions = listOf(),
+                        summary = "",
+                        pricePerServing = "",
+                        prepTime = "",
+                        servings = "",
+                        isFavorite = false
+                    )
+                }
+            }
+            return recipeList
         }
 
-        fun recipeFromJson(data: String): Recipe{
-            val recipeJSON = JSONObject(data)
+        fun recipeFromJson(data: String): Recipe {
 
-            val ingredientsArray = recipeJSON.getJSONArray("extendedIngredients")
-            val instructionArray = recipeJSON.getJSONArray("analyzedInstructions")
-            var ingredients = listOf<String>()
-            var instructions = listOf<String>()
 
-            ingredients = ingredientsArray.let {
-                0.until(it.length()).map { index ->
-                    it.getJSONObject(index).getString("name")
-                }
-            }
+            val recipeJSONObject = JSONObject(data)
+                    val ingredientsArray = recipeJSONObject.getJSONArray("extendedIngredients")
+                    val instructionArray = recipeJSONObject.getJSONArray("analyzedInstructions")
+                    var ingredients = listOf<String>()
+                    var instructions = listOf<String>()
 
-            instructions = instructionArray.let {
-                0.until(it.length()).map { index ->
-                    it.getJSONObject(index).getString("name")
-                }
-            }
+                    ingredients = ingredientsArray.let {
+                        0.until(it.length()).map { index ->
+                            it.getJSONObject(index).getString("name")
+                        }
+                    }
 
-            var imageUrl = ""
-            if (recipeJSON.has("image")) {
-                imageUrl = recipeJSON.getString("image")
-            }
-            val recipe = Recipe(
-                id= recipeJSON.getInt("id"),
-                title = recipeJSON.getString("title"),
-                imageUrl = imageUrl,
-                ingredients = ingredients,
-                instructions = instructions,
-                summary = recipeJSON.getString("summary"),
-                pricePerServing = recipeJSON.getString("pricePerServing"),
-                prepTime = recipeJSON.getString("readyInMinutes"),
-                servings = recipeJSON.getString("servings"),
-                isFavorite = false
-            )
+                    instructions = instructionArray.let {
+                        0.until(it.length()).map { index ->
+                            it.getJSONObject(index).getString("name")
+                        }
+                    }
+
+                    var imageUrl = ""
+                    if (recipeJSONObject.has("image")) {
+                        imageUrl = recipeJSONObject.getString("image")
+                    }
+                    val recipe = Recipe(
+                        id= recipeJSONObject.getInt("id"),
+                        title = recipeJSONObject.getString("title"),
+                        imageUrl = imageUrl,
+                        ingredients = ingredients,
+                        instructions = instructions,
+                        summary = recipeJSONObject.getString("summary"),
+                        pricePerServing = recipeJSONObject.getString("pricePerServing"),
+                        prepTime = recipeJSONObject.getString("readyInMinutes"),
+                        servings = recipeJSONObject.getString("servings"),
+                        isFavorite = false
+                    )
+
             return recipe
         }
+        
+        fun recipeListFromJson(data: String): List<Recipe> {
 
-        fun recipeListFromJson(data: String, recipeDao: FavoriteRecipeDao): List<Recipe> {
-            val randomRecipeObject = JSONObject(data)
-            val recipeListJson = randomRecipeObject.getJSONArray("recipes")
+            val recipeObject = JSONObject(data)
+            val recipeListJson = recipeObject.getJSONArray("recipes")
             val recipeList = recipeListJson.let { it ->
                 0.until(it.length()).map { index ->
                     val recipe = it.getJSONObject(index)
@@ -106,10 +119,7 @@ class Recipe(
                         pricePerServing = recipe.getString("pricePerServing"),
                         prepTime = recipe.getString("readyInMinutes"),
                         servings = recipe.getString("servings"),
-                        isFavorite = isFavorite(
-                            recipe.getInt("id"),
-                            recipeDao
-                        )
+                        isFavorite = false
                     )
 
 
