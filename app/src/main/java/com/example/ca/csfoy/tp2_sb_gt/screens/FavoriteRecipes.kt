@@ -1,6 +1,7 @@
 package com.example.ca.csfoy.tp2_sb_gt.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
@@ -29,15 +30,13 @@ fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
                 RecipeItem(
                     recipe = recipe,
                     onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
-                    onFavoriteClick = {
-                        recipe.isFavorite = !recipe.isFavorite
-                        recipeViewModel.removeFavorite(recipe)
-                        recipeViewModel.getFavoriteRecipes()
-                    },
                     cardSize = Modifier.size(200.dp, 200.dp),
                     heightIn = Modifier.heightIn(100.dp, 140.dp),
                     recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
                 )
+            }
+            item{
+                Spacer(Modifier.size(55.dp))
             }
         }
     )
