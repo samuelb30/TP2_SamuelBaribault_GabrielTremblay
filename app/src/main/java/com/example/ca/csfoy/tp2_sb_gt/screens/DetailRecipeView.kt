@@ -46,6 +46,7 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 @Composable
 fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, onClickFavorite: ()->Unit){
     recipeViewModel.isCurrentRecipeFavorite = recipeViewModel.currentRecipe.isFavorite
+    val recipe = recipeViewModel.currentRecipe
     LazyColumn (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
