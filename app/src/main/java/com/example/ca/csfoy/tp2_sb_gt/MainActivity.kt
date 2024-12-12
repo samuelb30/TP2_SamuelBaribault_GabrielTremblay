@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
                     AppTopBar()
                 }) { innerPadding ->
-                    InitApp(innerPadding, applicationContext)
+                    RecipeApp(innerPadding, applicationContext)
                 }
             }
         }
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun InitApp(innerPadding: PaddingValues, context: Context) {
+private fun RecipeApp(innerPadding: PaddingValues, context: Context) {
     val db = connectDatabase(context)
 
     val recipeViewModel: RecipeViewModel = viewModel(factory = viewModelFactory {

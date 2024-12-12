@@ -20,7 +20,6 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
 fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
-
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(

@@ -18,13 +18,13 @@ class Recipe(
 ) {
     companion object {
 
-        fun recipeCardListFromJson(data: String): List<Recipe>{
+        fun recipeCardListFromJson(data: String): List<Recipe> {
             val recipeListJson = JSONArray(data)
-            val recipeList = recipeListJson.let{
+            val recipeList = recipeListJson.let {
                 0.until(it.length()).map { index ->
-                 val recipeJSON = it.getJSONObject(index)
+                    val recipeJSON = it.getJSONObject(index)
                     Recipe(
-                        id= recipeJSON.getInt("id"),
+                        id = recipeJSON.getInt("id"),
                         title = recipeJSON.getString("title"),
                         imageUrl = recipeJSON.getString("image"),
                         ingredients = listOf(),
@@ -45,10 +45,8 @@ class Recipe(
 
             val ingredientsArray = recipeJSONObject.getJSONArray("extendedIngredients")
             val instructionArray = recipeJSONObject.getJSONArray("analyzedInstructions")
-            var ingredients = listOf<Ingredient>()
-            var instructions = listOf<String>()
 
-            ingredients = ingredientsArray.let {
+            val ingredients = ingredientsArray.let {
                 0.until(it.length()).map { index ->
                     val ingredient = it.getJSONObject(index)
                     Ingredient(
@@ -59,7 +57,7 @@ class Recipe(
                 }
             }
 
-            instructions = instructionArray.let {
+            val instructions = instructionArray.let {
                 0.until(it.length()).map { index ->
                     it.getJSONObject(index).getString("name")
                 }
@@ -70,7 +68,7 @@ class Recipe(
                 imageUrl = recipeJSONObject.getString("image")
             }
             val recipe = Recipe(
-                id= recipeJSONObject.getInt("id"),
+                id = recipeJSONObject.getInt("id"),
                 title = recipeJSONObject.getString("title"),
                 imageUrl = imageUrl,
                 ingredients = ingredients,
@@ -84,7 +82,7 @@ class Recipe(
 
             return recipe
         }
-        
+
         fun recipeListFromJson(data: String): List<Recipe> {
 
             val recipeObject = JSONObject(data)
@@ -94,10 +92,8 @@ class Recipe(
                     val recipe = it.getJSONObject(index)
                     val ingredientsArray = recipe.getJSONArray("extendedIngredients")
                     val instructionArray = recipe.getJSONArray("analyzedInstructions")
-                    var ingredients = listOf<Ingredient>()
-                    var instructions = listOf<String>()
 
-                    ingredients = ingredientsArray.let {
+                    val ingredients = ingredientsArray.let {
                         0.until(it.length()).map { index ->
                             val ingredient = it.getJSONObject(index)
                             Ingredient(
@@ -108,7 +104,7 @@ class Recipe(
                         }
                     }
 
-                    instructions = instructionArray.let {
+                    val instructions = instructionArray.let {
                         0.until(it.length()).map { index ->
                             it.getJSONObject(index).getString("name")
                         }
@@ -119,9 +115,9 @@ class Recipe(
                         imageUrl = recipe.getString("image")
                     }
                     Recipe(
-                       id= recipe.getInt("id"),
-                       title = recipe.getString("title"),
-                       imageUrl = imageUrl,
+                        id = recipe.getInt("id"),
+                        title = recipe.getString("title"),
+                        imageUrl = imageUrl,
                         ingredients = ingredients,
                         instructions = instructions,
                         summary = recipe.getString("summary"),
@@ -130,10 +126,7 @@ class Recipe(
                         servings = recipe.getString("servings"),
                         isFavorite = false
                     )
-
-
                 }
-
             }
             return recipeList
         }

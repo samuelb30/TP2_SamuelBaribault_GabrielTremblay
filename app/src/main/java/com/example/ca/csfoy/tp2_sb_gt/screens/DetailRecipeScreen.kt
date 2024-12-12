@@ -38,7 +38,7 @@ import coil.compose.AsyncImage
 import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.model.Ingredient
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
-
+//Inspiration pour utiliser Box https://developer.android.com/develop/ui/compose/layouts/basics
 @Composable
 fun DetailRecipeView(
     recipeViewModel: RecipeViewModel,

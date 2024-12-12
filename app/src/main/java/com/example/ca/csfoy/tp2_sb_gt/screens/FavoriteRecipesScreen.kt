@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
-//Inspirer de https://stackoverflow.com/questions/74652077/jetpack-compose-how-to-make-two-lazy-columns-scroll-together
+//Inspirer pour la grid de https://stackoverflow.com/questions/74652077/jetpack-compose-how-to-make-two-lazy-columns-scroll-together
 @Composable
 fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
     val state = rememberLazyStaggeredGridState()

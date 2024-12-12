@@ -62,7 +62,6 @@ fun RecipeCard(
     heightIn: Modifier,
     recipeImagePlaceHolder: Int
 ) {
-
     ElevatedCard(
         modifier = cardSize,
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
