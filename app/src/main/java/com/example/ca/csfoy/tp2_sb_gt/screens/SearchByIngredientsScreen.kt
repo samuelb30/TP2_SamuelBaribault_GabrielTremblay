@@ -20,7 +20,7 @@ import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
-fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Unit, onReturnClick: () -> Unit) {
+fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
         Row (Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
@@ -44,15 +44,9 @@ fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Uni
                     RecipeItem(
                         recipe = recipe,
                         onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
-                        onFavoriteClick = {
-                            recipe.isFavorite = !recipe.isFavorite
-                            if (recipe.isFavorite) {
-                                recipeViewModel.addFavorite(recipe)
-                            } else {recipeViewModel.removeFavorite(recipe)}
-                        },
-                        cardSize = Modifier.size(300.dp, 340.dp),
-                        heightIn = Modifier.heightIn(200.dp, 240.dp),
-                        recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
+                        cardSize = Modifier.size(width = 300.dp, height = 250.dp),
+                        heightIn = Modifier,
+                        recipeImagePlaceHolder = R.drawable.recipe_placeholder
                     )
 
                 }

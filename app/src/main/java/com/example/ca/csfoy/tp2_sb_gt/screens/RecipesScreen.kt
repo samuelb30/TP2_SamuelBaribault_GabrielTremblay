@@ -13,25 +13,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
@@ -48,7 +40,6 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
                 RecipeItem(
                     recipe = recipe,
                     onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
-                    onFavoriteClick = { recipe.isFavorite = !recipe.isFavorite; if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe); recipeViewModel.loadFavoriteRecipes()},
                     cardSize = Modifier.size(350.dp, 300.dp),
                     heightIn = Modifier.heightIn(200.dp, 240.dp),
                     recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
@@ -66,7 +57,6 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
 @Composable
 fun RecipeItem(
     recipe: Recipe,
-    onFavoriteClick: () -> Unit,
     onRecipeClick: () -> Unit,
     cardSize: Modifier,
     heightIn: Modifier,
@@ -95,17 +85,6 @@ fun RecipeItem(
                 Row(Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
                     Text(text = recipe.title, style = MaterialTheme.typography.titleSmall,overflow = TextOverflow.Ellipsis)
                 }
-            }
-            val isFavorite = rememberSaveable { mutableStateOf(recipe.isFavorite) }
-            IconButton(modifier = Modifier.align(Alignment.TopEnd).padding(5.dp), onClick = {
-                onFavoriteClick()
-                isFavorite.value = recipe.isFavorite
-            }) {
-                Icon(
-                    imageVector = if (isFavorite.value) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                    contentDescription = "Favorite",
-                    tint = if (isFavorite.value) MaterialTheme.colorScheme.secondary else androidx.compose.ui.graphics.Color.Black
-                )
             }
         }
     }
