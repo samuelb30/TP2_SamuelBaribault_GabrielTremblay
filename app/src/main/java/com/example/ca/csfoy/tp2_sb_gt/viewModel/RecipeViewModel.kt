@@ -1,5 +1,6 @@
 package com.example.ca.csfoy.tp2_sb_gt.viewModel
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,17 +13,18 @@ import com.example.ca.csfoy.tp2_sb_gt.model.FavoriteRecipe
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
+
     val imagePlaceHolderId = R.drawable.recipe_placeholder
     var isLoading by mutableStateOf(false)
     var searchText = mutableStateOf("")
     val randomRecipes = mutableStateListOf<Recipe>()
     val favoriteRecipes = mutableStateListOf<Recipe>()
     val filteredRecipes = mutableStateListOf<Recipe>()
+
     var currentRecipe by mutableStateOf(
         Recipe(
             -1,
@@ -95,22 +97,22 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
     fun loadFavoriteRecipes() {
         favoriteRecipes.clear()
         viewModelScope.launch(Dispatchers.IO) {
-            recipeDao.getAll().collect { recipes ->
-                recipes.forEach { recipe ->
-                    val favoriteRecipe = Recipe(
-                        recipe.recipeId,
-                        recipe.title,
-                        recipe.image,
-                        listOf(),
-                        listOf(),
-                        "",
-                        "",
-                        "",
-                        "",
-                        true
-                    )
-                    favoriteRecipes.add(favoriteRecipe)
-                }
+            val favoriteRecipesDb = recipeDao.getAll().first()
+
+            for (favoriteRecipe in favoriteRecipesDb) {
+                val recipe = Recipe(
+                    favoriteRecipe.recipeId,
+                    favoriteRecipe.title,
+                    favoriteRecipe.image,
+                    listOf(),
+                    listOf(),
+                    "",
+                    "",
+                    "",
+                    "",
+                    false
+                )
+               favoriteRecipes.add(recipe)
             }
 
         }
@@ -129,6 +131,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         }
 
     }
+
 
 }
 

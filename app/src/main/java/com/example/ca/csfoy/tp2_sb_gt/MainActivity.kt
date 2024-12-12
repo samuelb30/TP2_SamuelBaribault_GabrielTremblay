@@ -153,6 +153,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                             } else {
                                 recipeViewModel.removeFavorite(recipeViewModel.currentRecipe)
                             }
+                            recipeViewModel.loadFavoriteRecipes()
                         }
                     )
                 }
@@ -170,8 +171,6 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                     SearchByIngredientsView(recipeViewModel, onClick = {
                         recipeViewModel.fetchCurrentRecipeInfo()
                         navController.navigate(Routes.DetailedView.title)
-                    }, onReturnClick = {
-                        navController.popBackStack()
                     })
                 }
             }
@@ -194,7 +193,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                 ) {
                     Button(
                         modifier = buttonModifier,
-                        onClick = { navController.popBackStack()}) {
+                        onClick = { navController.popBackStack(Routes.Main.title, false)}) {
                         Text(text = stringResource(R.string.discover_button_text))
                     }
                     Button(

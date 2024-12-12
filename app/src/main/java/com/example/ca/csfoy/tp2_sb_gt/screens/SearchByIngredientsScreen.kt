@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +18,7 @@ import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
-fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Unit, onReturnClick: () -> Unit) {
+fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
         Row (Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
@@ -43,11 +42,7 @@ fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Uni
                     RecipeItem(
                         recipe = recipe,
                         onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
-                        onFavoriteClick = {
-                            recipe.isFavorite = !recipe.isFavorite
-                            if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe)
-                        },
-                        cardSize = Modifier,
+                        cardSize = Modifier.size(width = 300.dp, height = 250.dp),
                         heightIn = Modifier,
                         recipeImagePlaceHolder = R.drawable.recipe_placeholder
                     )
