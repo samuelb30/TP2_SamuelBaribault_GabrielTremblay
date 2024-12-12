@@ -24,4 +24,10 @@
     <string name="no_recipes_found_text">"No recipes found for: "</string>
     <string name="recipes_found_text">"Search results for: "</string>
     <string name="ingredient_details">• %1$s %2$s of %3$s</string>
+    <string name="text_when_no_ingredient">• None</string>
+    <string name="text_when_no_units">units</string>
+    <string name="text_when_no_instruction">• None</string>
+    <string name="search_button_text">Search</string>
+    <string name="App_title">My Recipe Book</string>
+    <string name="icon_of_the_app_descruption">Icon of the app</string>
 </resources>

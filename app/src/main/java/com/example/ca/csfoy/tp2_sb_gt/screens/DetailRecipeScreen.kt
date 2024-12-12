@@ -26,10 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,21 +36,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.ca.csfoy.tp2_sb_gt.R
-import com.example.ca.csfoy.tp2_sb_gt.service.Ingredient
+import com.example.ca.csfoy.tp2_sb_gt.model.Ingredient
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 @Composable
-fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, onClickFavorite: ()->Unit){
+fun DetailRecipeView(
+    recipeViewModel: RecipeViewModel,
+    onClickReturn: () -> Unit,
+    onClickFavorite: () -> Unit
+) {
     val recipe = recipeViewModel.currentRecipe
-    LazyColumn (
+    LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-    ){
-        item{
-            Box (
+    ) {
+        item {
+            Box(
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
                 AsyncImage(
                     model = if (recipeViewModel.currentRecipe.imageUrl != "") recipeViewModel.currentRecipe.imageUrl else recipeViewModel.imagePlaceHolderId,
                     stringResource(R.string.recipe_image),
@@ -78,33 +78,49 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
             }
         }
         item {
-            Surface (
+            Surface(
                 shape = RoundedCornerShape(20.dp),
                 shadowElevation = 10.dp,
                 modifier = Modifier
                     .offset(0.dp, (-18).dp)
-            ){
-                Column (
+            ) {
+                Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(15.dp),
                     modifier = Modifier
                         .padding(10.dp)
-                ){
-                    Row (
+                ) {
+                    Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier.fillMaxWidth()
-                    ){
-                        InformationCells(recipeViewModel.currentRecipe.prepTime + stringResource(R.string.prepTime_information_cell_units), R.drawable.clock_icon_lg)
-                        InformationCells(recipeViewModel.currentRecipe.servings + stringResource(R.string.servings_information_cell_units), R.drawable.servings_icon)
-                        InformationCells(stringResource(R.string.pricePerServings_information_cell_unit) + recipeViewModel.currentRecipe.pricePerServing, R.drawable.price_icon)
+                    ) {
+                        InformationCells(
+                            recipeViewModel.currentRecipe.prepTime + stringResource(R.string.prepTime_information_cell_units),
+                            R.drawable.clock_icon_lg
+                        )
+                        InformationCells(
+                            recipeViewModel.currentRecipe.servings + stringResource(R.string.servings_information_cell_units),
+                            R.drawable.servings_icon
+                        )
+                        InformationCells(
+                            stringResource(R.string.pricePerServings_information_cell_unit) + recipeViewModel.currentRecipe.pricePerServing,
+                            R.drawable.price_icon
+                        )
                     }
-                    Text(recipe.title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary)
+                    Text(
+                        recipe.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
                     IngredientList(
                         recipe.ingredients,
                         stringResource(R.string.ingredients_list_label)
                     )
                     RecipeSummary(recipe.summary)
-                    InstructionList(recipe.instructions, stringResource(R.string.instructions_label))
+                    InstructionList(
+                        recipe.instructions,
+                        stringResource(R.string.instructions_label)
+                    )
                 }
             }
         }
@@ -115,43 +131,54 @@ fun DetailRecipeView(recipeViewModel: RecipeViewModel, onClickReturn: ()->Unit, 
 }
 
 @Composable
-fun InformationCells(text: String, iconId: Int){
-    Surface (
+fun InformationCells(text: String, iconId: Int) {
+    Surface(
         color = MaterialTheme.colorScheme.secondary,
         shape = RoundedCornerShape(15.dp),
         shadowElevation = 3.dp
-    ){
-        Row (
+    ) {
+        Row(
             modifier = Modifier.padding(3.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
-            Surface (
+        ) {
+            Surface(
                 color = Color.White,
                 shape = CircleShape,
-            ){
-                Image(painter = painterResource(id = iconId),
+            ) {
+                Image(
+                    painter = painterResource(id = iconId),
                     stringResource(R.string.icon_for_the_information_cell), modifier = Modifier
                         .size(30.dp)
-                        .padding())
+                        .padding()
+                )
             }
             Text(
-                text=if(text != ""){text}else { stringResource(R.string.when_info_for_cell_unavailable) },
-                fontWeight = FontWeight.Bold ,
+                text = if (text != "") {
+                    text
+                } else {
+                    stringResource(R.string.when_info_for_cell_unavailable)
+                },
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(5.dp, 0.dp, 5.dp, 0.dp),
-                color = Color.Black)
+                color = Color.Black
+            )
         }
     }
 }
 
 @Composable
-fun ReturnButton(modifier: Modifier, onClick: () -> Unit){
+fun ReturnButton(modifier: Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         elevation = ButtonDefaults.buttonElevation(10.dp),
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     ) {
-        Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.return_button_description), tint = Color.White)
+        Icon(
+            Icons.AutoMirrored.Rounded.ArrowBack,
+            stringResource(R.string.return_button_description),
+            tint = Color.White
+        )//Reste tout le temps même couleur
     }
 }
 
@@ -160,61 +187,86 @@ fun FavoriteButton(modifier: Modifier, isRecipeFavorite: Boolean, onClick: () ->
     Button(
         onClick = {
             onClick()
-                  },
+        },
         elevation = ButtonDefaults.buttonElevation(10.dp),
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     ) {
 
-        if(!isRecipeFavorite){
-            Icon(Icons.Rounded.FavoriteBorder,
-                stringResource(R.string.icon_when_recipe_not_favorite), tint = Color.White)
-        }
-        else{
-            Icon(Icons.Rounded.Favorite,
-                stringResource(R.string.icon_when_recipe_favorite), tint = Color.White)
+        if (!isRecipeFavorite) {
+            Icon(
+                Icons.Rounded.FavoriteBorder,
+                stringResource(R.string.icon_when_recipe_not_favorite), tint = Color.White
+            )//Reste tout le temps même couleur
+        } else {
+            Icon(
+                Icons.Rounded.Favorite,
+                stringResource(R.string.icon_when_recipe_favorite), tint = Color.White
+            )//Reste tout le temps même couleur
         }
     }
 }
 
 @Composable
 fun InstructionList(instructions: List<String>, listTitle: String) {
-    Column (
+    Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxWidth()
-    ){
-        Text(text = listTitle, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
+    ) {
+        Text(
+            text = listTitle,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.tertiary
+        )
         instructions.forEach { instruction ->
-            if(instruction != ""){
+            if (instruction != "") {
                 Text(
                     text = stringResource(R.string.list_item, instruction),
-                    color = MaterialTheme.colorScheme.tertiary)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
             }
         }
-        if(instructions.isEmpty() || instructions[0].isEmpty()){
-            Text(text="• None", color = MaterialTheme.colorScheme.tertiary)
+        if (instructions.isEmpty() || instructions[0].isEmpty()) {
+            Text(
+                text = stringResource(R.string.text_when_no_instruction),
+                color = MaterialTheme.colorScheme.tertiary,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }
 
 @Composable
 fun IngredientList(ingredients: List<Ingredient>, listTitle: String) {
-    Column (
+    Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.fillMaxWidth()
-    ){
-        Text(text = listTitle, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
+    ) {
+        Text(
+            text = listTitle,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.tertiary
+        )
         ingredients.forEach { ingredient ->
-            Text(text = stringResource(
-                R.string.ingredient_details,
-                ingredient.quantity,
-                if(ingredient.unit != "") ingredient.unit else "units",
-                ingredient.name
-            ),
-                color = MaterialTheme.colorScheme.tertiary)
+            Text(
+                text = stringResource(
+                    R.string.ingredient_details,
+                    ingredient.quantity,
+                    if (ingredient.unit != "") ingredient.unit else stringResource(R.string.text_when_no_units),
+                    ingredient.name
+                ),
+                color = MaterialTheme.colorScheme.tertiary,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
-        if(ingredients.isEmpty()){
-            Text(text="• None", color = MaterialTheme.colorScheme.tertiary)
+        if (ingredients.isEmpty()) {
+            Text(
+                text = stringResource(R.string.text_when_no_ingredient),
+                color = MaterialTheme.colorScheme.tertiary,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }
@@ -228,8 +280,13 @@ fun RecipeSummary(summary: String) {
             color = MaterialTheme.colorScheme.tertiary
         )
         Text(
-            text = if(summary != ""){summary} else { stringResource(R.string.when_no_summary)},
-            color = MaterialTheme.colorScheme.tertiary
+            text = if (summary != "") {
+                summary
+            } else {
+                stringResource(R.string.when_no_summary)
+            },
+            color = MaterialTheme.colorScheme.tertiary,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

@@ -34,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.ca.csfoy.tp2_sb_gt.database.connectDatabase
 import com.example.ca.csfoy.tp2_sb_gt.screens.DetailRecipeView
 import com.example.ca.csfoy.tp2_sb_gt.screens.FavoriteRecipesList
-import com.example.ca.csfoy.tp2_sb_gt.screens.Routes
+import com.example.ca.csfoy.tp2_sb_gt.screens.Screens
 import com.example.ca.csfoy.tp2_sb_gt.screens.SearchByIngredientsView
 import com.example.ca.csfoy.tp2_sb_gt.screens.ShowRecipes
 import com.example.ca.csfoy.tp2_sb_gt.ui.theme.TP2_SamuelBaribault_GabrielTremblayTheme
@@ -60,7 +59,6 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -75,6 +73,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun InitApp(innerPadding: PaddingValues, context: Context) {
@@ -85,9 +84,9 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
     })
 
     val refreshScope = rememberCoroutineScope()
-        val navController = rememberNavController()
+    val navController = rememberNavController()
     fun refresh() { //https://developer.android.com/reference/kotlin/androidx/compose/material/pullrefresh/package-summary
-        if(navController.currentBackStackEntry?.destination?.route == Routes.Main.title) {
+        if (navController.currentBackStackEntry?.destination?.route == Screens.Main.title) {
             recipeViewModel.isLoading = true
             refreshScope.launch {
                 recipeViewModel.reloadRecipes()
@@ -99,7 +98,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
     val state = rememberPullRefreshState(recipeViewModel.isLoading, ::refresh)
 
     Box(
-        modifier = Modifier.padding(innerPadding)
+        modifier = Modifier
             .fillMaxSize()
             .pullRefresh(
                 state = rememberPullRefreshState(
@@ -110,45 +109,60 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
 
     ) {
         Column {
-            Row(modifier = Modifier.padding(bottom = 20.dp), horizontalArrangement = Arrangement.Center) {
-
+            Row(
+                modifier = Modifier.padding(bottom = 20.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp),
                     value = recipeViewModel.searchText.value,
                     onValueChange = { recipeViewModel.searchText.value = it },
                     label = { Text(text = stringResource(R.string.search_text)) },
-                    placeholder = { Text(text = stringResource(R.string.search_placeholder), color = MaterialTheme.colorScheme.onBackground) },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.search_placeholder),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
                     trailingIcon = {
-                        Button(modifier = Modifier.offset(x= (-10).dp), onClick = {
+                        Button(modifier = Modifier.offset(x = (-10).dp), onClick = {
 
-                            if(recipeViewModel.searchText.value.isNotBlank()){
+                            if (recipeViewModel.searchText.value.isNotBlank()) {
                                 recipeViewModel.loadFilteredRecipes()
                             }
-                            navController.navigate(Routes.SearchByIngredients.title)
+                            navController.navigate(Screens.SearchByIngredients.title)
                             recipeViewModel.displayedSearchText = recipeViewModel.searchText.value
                         }) {
-                            Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
+                            Icon(
+                                imageVector = Icons.Rounded.Search,
+                                contentDescription = stringResource(R.string.search_button_text)
+                            )
                         }
                     }
                 )
             }
 
-            NavHost(navController = navController, startDestination = Routes.Main.title) {
-                composable(Routes.Main.title) {
+            NavHost(navController = navController, startDestination = Screens.Main.title) {
+                composable(Screens.Main.title) {
                     ShowRecipes(recipeViewModel, onClick = {
-                        navController.navigate(Routes.DetailedView.title)
+                        navController.navigate(Screens.DetailedView.title)
                     })
                 }
-                composable(Routes.DetailedView.title) {
-                    recipeViewModel.isCurrentRecipeFavorite = recipeViewModel.currentRecipe.isFavorite
+                composable(Screens.DetailedView.title) {
+                    recipeViewModel.isCurrentRecipeFavorite =
+                        recipeViewModel.currentRecipe.isFavorite
                     DetailRecipeView(
                         recipeViewModel,
                         onClickReturn = {
                             navController.popBackStack()
                         },
                         onClickFavorite = {
-                            recipeViewModel.currentRecipe.isFavorite = !recipeViewModel.currentRecipe.isFavorite
-                            recipeViewModel.isCurrentRecipeFavorite = recipeViewModel.currentRecipe.isFavorite
+                            recipeViewModel.currentRecipe.isFavorite =
+                                !recipeViewModel.currentRecipe.isFavorite
+                            recipeViewModel.isCurrentRecipeFavorite =
+                                recipeViewModel.currentRecipe.isFavorite
                             if (recipeViewModel.currentRecipe.isFavorite) {
                                 recipeViewModel.addFavorite(recipeViewModel.currentRecipe)
                             } else {
@@ -158,26 +172,30 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                         }
                     )
                 }
-                composable(Routes.Favorites.title) {
+                composable(Screens.Favorites.title) {
                     FavoriteRecipesList(
                         recipeViewModel,
                         onClick = {
                             recipeViewModel.fetchCurrentRecipeInfo()
-                            navController.navigate(Routes.DetailedView.title)
+                            navController.navigate(Screens.DetailedView.title)
                         }
                     )
                 }
 
-                composable(Routes.SearchByIngredients.title) {
+                composable(Screens.SearchByIngredients.title) {
                     SearchByIngredientsView(recipeViewModel, onClick = {
                         recipeViewModel.fetchCurrentRecipeInfo()
-                        navController.navigate(Routes.DetailedView.title)
+                        navController.navigate(Screens.DetailedView.title)
                     })
                 }
             }
-            }
+        }
 
-        Row(modifier = Modifier.align(alignment = Alignment.BottomStart).padding(horizontal = 18.dp)) {
+        Row(
+            modifier = Modifier
+                .align(alignment = Alignment.BottomStart)
+                .padding(horizontal = 18.dp)
+        ) {
             val buttonModifier = Modifier.size(width = 150.dp, height = 40.dp)
             Surface(
                 modifier = Modifier
@@ -194,16 +212,24 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                 ) {
                     Button(
                         modifier = buttonModifier,
-                        onClick = { navController.popBackStack(Routes.Main.title, false)}) {
-                        Text(text = stringResource(R.string.discover_button_text))
+                        onClick = { navController.popBackStack(Screens.Main.title, false) }) {
+                        Text(
+                            text = stringResource(R.string.discover_button_text),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                     Button(
                         modifier = buttonModifier,
                         onClick = {
-                            navController.navigate(Routes.Favorites.title)
+                            navController.navigate(Screens.Favorites.title)
                             recipeViewModel.loadFavoriteRecipes()
                         }) {
-                        Text(text = stringResource(R.string.favorites_button_text))
+                        Text(
+                            text = stringResource(R.string.favorites_button_text),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                 }
 
@@ -221,10 +247,21 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(){
+fun AppTopBar() {
     TopAppBar(
-        title = {Text(text = "My Recipe Book", style = MaterialTheme.typography.titleLarge)},
-        navigationIcon = {Image(painter = painterResource(R.drawable.recipe_app_logo), contentDescription = "", Modifier.size(80.dp))},
+        title = {
+            Text(
+                text = stringResource(R.string.App_title),
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        navigationIcon = {
+            Image(
+                painter = painterResource(R.drawable.recipe_app_logo),
+                contentDescription = stringResource(R.string.icon_of_the_app_descruption),
+                Modifier.size(80.dp)
+            )
+        },
         colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary)
     )
 

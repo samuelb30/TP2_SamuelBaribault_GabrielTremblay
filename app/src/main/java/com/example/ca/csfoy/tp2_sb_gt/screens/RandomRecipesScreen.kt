@@ -24,7 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
+import com.example.ca.csfoy.tp2_sb_gt.model.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 
@@ -37,7 +37,7 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(recipeViewModel.randomRecipes) { recipe ->
-                RecipeItem(
+                RecipeCard(
                     recipe = recipe,
                     onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
                     cardSize = Modifier.size(350.dp, 300.dp),
@@ -45,7 +45,7 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
                     recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
                 )
             }
-            item{
+            item {
                 Spacer(Modifier.size(55.dp))
             }
         }
@@ -55,7 +55,7 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
 
 
 @Composable
-fun RecipeItem(
+fun RecipeCard(
     recipe: Recipe,
     onRecipeClick: () -> Unit,
     cardSize: Modifier,
@@ -83,7 +83,11 @@ fun RecipeItem(
                     )
                 }
                 Row(Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = recipe.title, style = MaterialTheme.typography.titleSmall,overflow = TextOverflow.Ellipsis)
+                    Text(
+                        text = recipe.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }

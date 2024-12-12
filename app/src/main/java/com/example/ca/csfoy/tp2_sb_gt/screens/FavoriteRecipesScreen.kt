@@ -16,7 +16,7 @@ import com.example.ca.csfoy.tp2_sb_gt.viewModel.RecipeViewModel
 
 //Inspirer de https://stackoverflow.com/questions/74652077/jetpack-compose-how-to-make-two-lazy-columns-scroll-together
 @Composable
-fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
+fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
     val state = rememberLazyStaggeredGridState()
 
     LazyVerticalStaggeredGrid(
@@ -27,7 +27,7 @@ fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
         verticalItemSpacing = 10.dp,
         content = {
             items(recipeViewModel.favoriteRecipes) { recipe ->
-                RecipeItem(
+                RecipeCard(
                     recipe = recipe,
                     onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
                     cardSize = Modifier.size(200.dp, 200.dp),
@@ -35,7 +35,7 @@ fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
                     recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
                 )
             }
-            item{
+            item {
                 Spacer(Modifier.size(55.dp))
             }
         }

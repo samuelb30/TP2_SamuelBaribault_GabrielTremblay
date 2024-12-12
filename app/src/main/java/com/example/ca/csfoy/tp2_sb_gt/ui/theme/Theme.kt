@@ -1,22 +1,17 @@
 package com.example.ca.csfoy.tp2_sb_gt.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = DarkGreen,
     secondary = Orange,
-    tertiary = White,
-    surface = DarkGray,
+    tertiary = Color.White,//text
+    background = DarkGray,
     onBackground = LightGray
 
 )
@@ -24,8 +19,8 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = LimeGreen,
     secondary = Orange,
-    tertiary = Color.Black,
-    surface = White,
+    tertiary = Color.Black,//text
+    background = Color.White,
     onBackground = LightGray
 
     /* Other default colors to override

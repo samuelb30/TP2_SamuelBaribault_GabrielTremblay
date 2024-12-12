@@ -1,6 +1,5 @@
 package com.example.ca.csfoy.tp2_sb_gt.viewModel
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,14 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.ca.csfoy.tp2_sb_gt.R
 import com.example.ca.csfoy.tp2_sb_gt.database.FavoriteRecipeDao
 import com.example.ca.csfoy.tp2_sb_gt.model.FavoriteRecipe
-import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
+import com.example.ca.csfoy.tp2_sb_gt.model.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
-
+class RecipeViewModel(private val recipeDao: FavoriteRecipeDao) : ViewModel() {
     val imagePlaceHolderId = R.drawable.recipe_placeholder
     var isLoading by mutableStateOf(false)
     var searchText = mutableStateOf("")
@@ -78,7 +76,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
 
     fun addFavorite(recipe: Recipe) {
         viewModelScope.launch(Dispatchers.IO) {
-            recipeDao.insert(FavoriteRecipe(recipe.id,recipe.title,recipe.imageUrl))
+            recipeDao.insert(FavoriteRecipe(recipe.id, recipe.title, recipe.imageUrl))
             recipe.isFavorite = true
         }
         favoriteRecipes.add(recipe)
@@ -91,7 +89,6 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         }
         favoriteRecipes.remove(recipe)
     }
-
 
 
     fun loadFavoriteRecipes() {
@@ -112,11 +109,12 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
                     "",
                     false
                 )
-               favoriteRecipes.add(recipe)
+                favoriteRecipes.add(recipe)
             }
 
         }
     }
+
     private fun isFavorite(recipeId: Int): Boolean {
         var isFavorite = false
         viewModelScope.launch {
@@ -137,6 +135,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
             }
         }
     }
+
     fun fetchCurrentRecipeInfo() {
         viewModelScope.launch(Dispatchers.IO) {
             currentRecipe = SpoonAcular.fetchRecipeById(currentRecipe.id)
