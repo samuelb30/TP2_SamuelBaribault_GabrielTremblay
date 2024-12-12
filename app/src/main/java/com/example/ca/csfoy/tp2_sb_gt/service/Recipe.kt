@@ -8,7 +8,7 @@ class Recipe(
     val id: Int,
     val title: String,
     val imageUrl: String,
-    val ingredients: List<String>,
+    val ingredients: List<Ingredient>,
     val instructions: List<String>,
     val summary: String,
     val prepTime: String,
@@ -41,42 +41,46 @@ class Recipe(
         }
 
         fun recipeFromJson(data: String): Recipe {
-
-
             val recipeJSONObject = JSONObject(data)
-                    val ingredientsArray = recipeJSONObject.getJSONArray("extendedIngredients")
-                    val instructionArray = recipeJSONObject.getJSONArray("analyzedInstructions")
-                    var ingredients = listOf<String>()
-                    var instructions = listOf<String>()
 
-                    ingredients = ingredientsArray.let {
-                        0.until(it.length()).map { index ->
-                            it.getJSONObject(index).getString("name")
-                        }
-                    }
+            val ingredientsArray = recipeJSONObject.getJSONArray("extendedIngredients")
+            val instructionArray = recipeJSONObject.getJSONArray("analyzedInstructions")
+            var ingredients = listOf<Ingredient>()
+            var instructions = listOf<String>()
 
-                    instructions = instructionArray.let {
-                        0.until(it.length()).map { index ->
-                            it.getJSONObject(index).getString("name")
-                        }
-                    }
-
-                    var imageUrl = ""
-                    if (recipeJSONObject.has("image")) {
-                        imageUrl = recipeJSONObject.getString("image")
-                    }
-                    val recipe = Recipe(
-                        id= recipeJSONObject.getInt("id"),
-                        title = recipeJSONObject.getString("title"),
-                        imageUrl = imageUrl,
-                        ingredients = ingredients,
-                        instructions = instructions,
-                        summary = recipeJSONObject.getString("summary"),
-                        pricePerServing = recipeJSONObject.getString("pricePerServing"),
-                        prepTime = recipeJSONObject.getString("readyInMinutes"),
-                        servings = recipeJSONObject.getString("servings"),
-                        isFavorite = false
+            ingredients = ingredientsArray.let {
+                0.until(it.length()).map { index ->
+                    val ingredient = it.getJSONObject(index)
+                    Ingredient(
+                        ingredient.getString("name"),
+                        ingredient.getString("amount"),
+                        ingredient.getString("unit")
                     )
+                }
+            }
+
+            instructions = instructionArray.let {
+                0.until(it.length()).map { index ->
+                    it.getJSONObject(index).getString("name")
+                }
+            }
+
+            var imageUrl = ""
+            if (recipeJSONObject.has("image")) {
+                imageUrl = recipeJSONObject.getString("image")
+            }
+            val recipe = Recipe(
+                id= recipeJSONObject.getInt("id"),
+                title = recipeJSONObject.getString("title"),
+                imageUrl = imageUrl,
+                ingredients = ingredients,
+                instructions = instructions,
+                summary = recipeJSONObject.getString("summary"),
+                pricePerServing = recipeJSONObject.getString("pricePerServing"),
+                prepTime = recipeJSONObject.getString("readyInMinutes"),
+                servings = recipeJSONObject.getString("servings"),
+                isFavorite = false
+            )
 
             return recipe
         }
@@ -90,12 +94,17 @@ class Recipe(
                     val recipe = it.getJSONObject(index)
                     val ingredientsArray = recipe.getJSONArray("extendedIngredients")
                     val instructionArray = recipe.getJSONArray("analyzedInstructions")
-                    var ingredients = listOf<String>()
+                    var ingredients = listOf<Ingredient>()
                     var instructions = listOf<String>()
 
                     ingredients = ingredientsArray.let {
                         0.until(it.length()).map { index ->
-                            it.getJSONObject(index).getString("name")
+                            val ingredient = it.getJSONObject(index)
+                            Ingredient(
+                                ingredient.getString("name"),
+                                ingredient.getString("amount"),
+                                ingredient.getString("unit")
+                            )
                         }
                     }
 

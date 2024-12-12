@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,10 +34,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,9 +67,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TP2_SamuelBaribault_GabrielTremblayTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-                    TopAppBar(modifier = Modifier,
-                        title = { Text("TP2") }
-                    )
+                    AppTopBar()
                 }) { innerPadding ->
                     InitApp(innerPadding, applicationContext)
                 }
@@ -104,6 +106,7 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
                     refreshing = recipeViewModel.isLoading,
                     onRefresh = { refresh() })
             )
+            .padding(innerPadding)
 
     ) {
         Column {
@@ -217,6 +220,17 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
             Modifier.align(Alignment.TopCenter)
         )//https://developer.android.com/reference/kotlin/androidx/compose/material/pullrefresh/package-summary
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppTopBar(){
+    TopAppBar(
+        title = {Text(text = "My Recipe Book", style = MaterialTheme.typography.titleLarge)},
+        navigationIcon = {Image(painter = painterResource(R.drawable.recipe_app_logo), contentDescription = "", Modifier.size(80.dp))},
+        colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary)
+    )
+
 }
 
 

@@ -23,4 +23,5 @@
     <string name="no_ingredients_entered_text">Enter ingredients to search</string>
     <string name="no_recipes_found_text">"No recipes found for: "</string>
     <string name="recipes_found_text">"Search results for: "</string>
+    <string name="ingredient_details">• %1$s %2$s of %3$s</string>
 </resources>

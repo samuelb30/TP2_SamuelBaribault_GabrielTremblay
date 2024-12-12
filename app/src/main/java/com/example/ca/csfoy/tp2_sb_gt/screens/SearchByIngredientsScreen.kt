@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,11 +46,13 @@ fun SearchByIngredientsView(recipeViewModel: RecipeViewModel, onClick: () -> Uni
                         onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
                         onFavoriteClick = {
                             recipe.isFavorite = !recipe.isFavorite
-                            if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe)
+                            if (recipe.isFavorite) {
+                                recipeViewModel.addFavorite(recipe)
+                            } else {recipeViewModel.removeFavorite(recipe)}
                         },
-                        cardSize = Modifier,
-                        heightIn = Modifier,
-                        recipeImagePlaceHolder = R.drawable.recipe_placeholder
+                        cardSize = Modifier.size(300.dp, 340.dp),
+                        heightIn = Modifier.heightIn(200.dp, 240.dp),
+                        recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
                     )
 
                 }
