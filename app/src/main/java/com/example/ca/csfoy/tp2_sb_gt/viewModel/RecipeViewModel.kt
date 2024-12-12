@@ -12,6 +12,7 @@ import com.example.ca.csfoy.tp2_sb_gt.model.FavoriteRecipe
 import com.example.ca.csfoy.tp2_sb_gt.service.Recipe
 import com.example.ca.csfoy.tp2_sb_gt.service.SpoonAcular
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -89,13 +90,7 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
         favoriteRecipes.remove(recipe)
     }
 
-    private fun isFavorite(recipeId: Int): Boolean {
-        var isFavorite = false
-        viewModelScope.launch(Dispatchers.IO) {
-            isFavorite = recipeDao.getById(recipeId).first() != null
-        }
-        return isFavorite
-    }
+
 
     fun loadFavoriteRecipes() {
         favoriteRecipes.clear()
@@ -120,10 +115,17 @@ class RecipeViewModel (private val recipeDao: FavoriteRecipeDao): ViewModel() {
 
         }
     }
+    private fun isFavorite(recipeId: Int): Boolean {
+        var isFavorite = false
+        viewModelScope.launch {
+            isFavorite = recipeDao.getById(recipeId).first() != null
+        }
+        return isFavorite
+    }
     fun fetchCurrentRecipeInfo() {
         viewModelScope.launch(Dispatchers.IO) {
             currentRecipe = SpoonAcular.fetchRecipeById(currentRecipe.id)
-            currentRecipe.isFavorite = isFavorite(currentRecipe.id)
+            currentRecipe.isFavorite = recipeDao.getById(currentRecipe.id).first() != null
         }
 
     }

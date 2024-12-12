@@ -48,7 +48,7 @@ fun ShowRecipes(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
                 RecipeItem(
                     recipe = recipe,
                     onRecipeClick = { recipeViewModel.currentRecipe = recipe; onClick() },
-                    onFavoriteClick = { recipe.isFavorite = !recipe.isFavorite; if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe)},
+                    onFavoriteClick = { recipe.isFavorite = !recipe.isFavorite; if (recipe.isFavorite) recipeViewModel.addFavorite(recipe) else recipeViewModel.removeFavorite(recipe); recipeViewModel.loadFavoriteRecipes()},
                     cardSize = Modifier.size(350.dp, 300.dp),
                     heightIn = Modifier.heightIn(200.dp, 240.dp),
                     recipeImagePlaceHolder = recipeViewModel.imagePlaceHolderId
