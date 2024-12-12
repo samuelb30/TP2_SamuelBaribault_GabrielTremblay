@@ -112,27 +112,25 @@ private fun InitApp(innerPadding: PaddingValues, context: Context) {
         Column {
             Row(modifier = Modifier.padding(bottom = 20.dp), horizontalArrangement = Arrangement.Center) {
 
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
-                        value = recipeViewModel.searchText.value,
-                        onValueChange = { recipeViewModel.searchText.value = it },
-                        label = { Text(text = stringResource(R.string.search_text)) },
-                        placeholder = { Text(text = stringResource(R.string.search_placeholder), color = MaterialTheme.colorScheme.onBackground) },
-                        trailingIcon = {
-                            Button(modifier = Modifier.offset(x= (-10).dp), onClick = {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
+                    value = recipeViewModel.searchText.value,
+                    onValueChange = { recipeViewModel.searchText.value = it },
+                    label = { Text(text = stringResource(R.string.search_text)) },
+                    placeholder = { Text(text = stringResource(R.string.search_placeholder), color = MaterialTheme.colorScheme.onBackground) },
+                    trailingIcon = {
+                        Button(modifier = Modifier.offset(x= (-10).dp), onClick = {
 
-                                if(recipeViewModel.searchText.value.isNotBlank()){
-                                    recipeViewModel.loadFilteredRecipes()
-                                }
-                                navController.navigate(Routes.SearchByIngredients.title)
-                                recipeViewModel.displayedSearchText = recipeViewModel.searchText.value
-                            }) {
-                                Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
+                            if(recipeViewModel.searchText.value.isNotBlank()){
+                                recipeViewModel.loadFilteredRecipes()
                             }
+                            navController.navigate(Routes.SearchByIngredients.title)
+                            recipeViewModel.displayedSearchText = recipeViewModel.searchText.value
+                        }) {
+                            Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
                         }
-                    )
-
-
+                    }
+                )
             }
 
             NavHost(navController = navController, startDestination = Routes.Main.title) {
