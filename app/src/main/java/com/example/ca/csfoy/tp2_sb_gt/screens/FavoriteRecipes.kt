@@ -32,7 +32,6 @@ fun FavoriteRecipesList(recipeViewModel: RecipeViewModel, onClick: () -> Unit){
                     onFavoriteClick = {
                         recipe.isFavorite = !recipe.isFavorite
                         recipeViewModel.removeFavorite(recipe)
-                        recipeViewModel.favoriteRecipes.remove(recipe)
                         recipeViewModel.getFavoriteRecipes()
                     },
                     cardSize = Modifier.size(200.dp, 200.dp),
